@@ -1,0 +1,16 @@
+{
+  "name": "home-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd backend; ./gradlew build -PwithFrontend",
+    "build:backend": "cd backend; ./gradlew build",
+    "build:frontend": "cd frontend; npm install; npm run build",
+    "clean": "npm run clean:frontend && npm run clean:backend",
+    "clean:backend": "cd backend; ./gradlew clean",
+    "clean:frontend": "cd frontend; npm run clean",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "isaiah.v"
+}

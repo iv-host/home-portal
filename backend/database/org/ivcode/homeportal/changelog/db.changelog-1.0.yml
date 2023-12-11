@@ -1,0 +1,105 @@
+databaseChangeLog:
+
+  # Image Table
+  - changeSet:
+      id: 1.0.1
+      author: isaiahv
+      changes:
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    - primaryKey: true
+                    - nullable: false
+              - column:
+                  name: path
+                  type: varchar(255)
+                  constraints:
+                    - nullable: false
+              - column:
+                  name: filename
+                  type: varchar(255)
+                  constraints:
+                    - nullable: false
+              - column:
+                  name: mime
+                  type: varchar(255)
+                  constraints:
+                    - nullable: false
+              - column:
+                  name: data
+                  type: longblob
+                  constraints:
+                    - nullable: false
+        - addUniqueConstraint:
+            tableName: image
+            constraintName: image_path_filename
+            columnNames: path, filename
+
+  # Link Table
+  - changeSet:
+      id: 1.0.2
+      author: isaiahv
+      changes:
+        - createTable:
+            tableName: link
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    - primaryKey: true
+                    - nullable: false
+              - column:
+                  name: image_id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    - nullable: false
+                    - unique: true
+              - column:
+                  name: href
+                  type: varchar(2000)
+                  constraints:
+                    - nullable: false
+        - addForeignKeyConstraint:
+            constraintName: fk_link_image
+            baseTableName: link
+            baseColumnNames: image_id
+            referencedTableName: image
+            referencedColumnNames:  id
+            onDelete: RESTRICT
+
+
+  # Background Table
+  - changeSet:
+      id: 1.0.3
+      author: isaiahv
+      changes:
+        - createTable:
+            tableName: background
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    - primaryKey: true
+                    - nullable: false
+              - column:
+                  name: image_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            constraintName: fk_background_image
+            baseTableName: background
+            baseColumnNames: image_id
+            referencedTableName: image
+            referencedColumnNames:  id
+            onDelete: RESTRICT

@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: org/ivcode/homeportal/changelog/db.changelog-1.0.yml

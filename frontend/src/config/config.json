@@ -1,0 +1,14 @@
+{
+  "development": {
+    "service": {
+      "host": "http://localhost:8080",
+      "path": "/api"
+    }
+  },
+  "production": {
+    "service": {
+      "host": "",
+      "path": "/api"
+    }
+  }
+}
