@@ -1,6 +1,6 @@
 {
   "name": "home-portal",
-  "version": "1.0.0",
+  "version": "0.1-SNAPSHOT",
   "description": "",
   "scripts": {
     "demo": "npm run build-image && npm run demo:start",
@@ -11,7 +11,9 @@
     "build-in-docker:image": "scripts/build-in-docker/build-image.sh",
     "build-image": "npm run build-in-docker && scripts/docker/build-image.sh",
     "dev:up": "cd scripts/dev; docker-compose up -d",
-    "dev:down": "cd scripts/dev; docker-compose down"
+    "dev:down": "cd scripts/dev; docker-compose down",
+    "version": "echo ${npm_package_version}",
+    "bversion": "cd frontend && npm run version"
   },
   "author": "isaiah.v"
 }
