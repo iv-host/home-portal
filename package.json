@@ -11,9 +11,7 @@
     "build-in-docker:image": "scripts/build-in-docker/build-image.sh",
     "build-image": "npm run build-in-docker && scripts/docker/build-image.sh",
     "dev:up": "cd scripts/dev; docker-compose up -d",
-    "dev:down": "cd scripts/dev; docker-compose down",
-    "version": "echo ${npm_package_version}",
-    "bversion": "cd frontend && npm run version"
+    "dev:down": "cd scripts/dev; docker-compose down"
   },
   "author": "isaiah.v"
 }
