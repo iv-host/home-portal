@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "org.ivcode"
-version = "1.0-SNAPSHOT"
+version = System.getenv("npm_package_version") ?: "dev-build"
 
 repositories {
     mavenCentral()
@@ -38,9 +38,6 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
-val publicDirectory = layout.buildDirectory.dir("resources/main/public").get().asFile
-
 fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): Int {
     println("> $this")
     return project.exec {
@@ -52,9 +49,16 @@ fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): 
 }
 
 if(project.hasProperty("withFrontend")) {
+    val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
+    val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
+    val publicDirectory = File(resourcesDirectory, "main/public")
+
     tasks.named("jar").configure{ dependsOn("copy-frontend") }
+    tasks.named("jar").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
+    tasks.named("bootJar").configure{ dependsOn("write-version") }
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
+    tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
 
     tasks.register("build-frontend") {
         doLast {
@@ -66,6 +70,13 @@ if(project.hasProperty("withFrontend")) {
         dependsOn(":processResources",":build-frontend")
         from(file(File(frontendDirectory,"build").absolutePath))
         into(publicDirectory.absolutePath)
+    }
+
+    tasks.register("write-version") {
+        dependsOn(":processResources")
+        doLast {
+            File(resourcesDirectory, "main/version.txt").writeText(text = version as String)
+        }
     }
 }
 
