@@ -9,13 +9,8 @@ export interface LinkProps {
 }
 
 export const Link = ({ name, href, icon }: LinkProps) => {
-  
-  const click = () => {
-    window.location.href = href;
-  }
-  
   return <>
-    <div className='link' tabIndex={0} onClick={click}>
+    <a className='link' tabIndex={0} href={href}>
       <div className='image'>
         <div className='icon'>
           <img src={icon ? icon : noimage} draggable={false}/>
@@ -24,6 +19,6 @@ export const Link = ({ name, href, icon }: LinkProps) => {
       <div className='name'>
         {name}
       </div>
-    </div>
+    </a>
   </>
 }

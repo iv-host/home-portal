@@ -1,4 +1,4 @@
-div.link {
+a.link {
   display: block;
   width: 100px;
   height:100px;
@@ -12,31 +12,32 @@ div.link {
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
+  text-decoration: none;
 }
 
-div.link:focus {
+a.link:focus {
   border-color: rgb(255, 255, 255);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19), 0 0 10px 0 rgba(255, 255, 255, 0.5);
 }
 
-div.link > div.image {
+a.link > div.image {
   margin: auto;
   width: 50%;
   text-align: center;
 }
 
-div.link .icon {
+a.link .icon {
   width: 45px;
   height: 60px;
 }
 
-div.link .icon > img {
+a.link .icon > img {
   width: 45px;
   height: 45px;
 }
 
 
-div.link .name {
+a.link .name {
   text-wrap: wrap;
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
