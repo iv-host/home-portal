@@ -103,3 +103,149 @@ databaseChangeLog:
             referencedTableName: image
             referencedColumnNames:  id
             onDelete: RESTRICT
+
+  # Demo Image Data
+  - changeSet:
+      id: 1.0.4
+      author: isaiahv
+      changes:
+        - insert:
+            tableName: image
+            columns:
+              - column:
+                  name: path
+                  value: /bg
+              - column:
+                  name: filename
+                  value: freenaturestock-2111.jpg
+              - column:
+                  name: mime
+                  value: image/jpeg
+              - column:
+                  name: data
+                  valueBlobFile: images/freenaturestock-2111.jpg
+        - insert:
+            tableName: image
+            columns:
+              - column:
+                  name: path
+                  value: /bg
+              - column:
+                  name: filename
+                  value: freenaturestock-2138.jpg
+              - column:
+                  name: mime
+                  value: image/jpeg
+              - column:
+                  name: data
+                  valueBlobFile: images/freenaturestock-2138.jpg
+        - insert:
+            tableName: image
+            columns:
+              - column:
+                  name: path
+                  value: /link/Google
+              - column:
+                  name: filename
+                  value: google.png
+              - column:
+                  name: mime
+                  value: image/png
+              - column:
+                  name: data
+                  valueBlobFile: images/google.png
+        - insert:
+            tableName: image
+            columns:
+              - column:
+                  name: path
+                  value: /link/Yahoo
+              - column:
+                  name: filename
+                  value: yahoo.png
+              - column:
+                  name: mime
+                  value: image/png
+              - column:
+                  name: data
+                  valueBlobFile: images/yahoo.png
+        - insert:
+            tableName: image
+            columns:
+              - column:
+                  name: path
+                  value: /link/Bing
+              - column:
+                  name: filename
+                  value: bing.png
+              - column:
+                  name: mime
+                  value: image/png
+              - column:
+                  name: data
+                  valueBlobFile: images/bing.png
+
+  # Demo Background Image #1
+  - changeSet:
+      id: 1.0.5
+      author: isaiahv
+      changes:
+        - sql:
+            dbms:  'mysql'
+            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='freenaturestock-2111.jpg'
+      rollback:
+        - sql:
+            dbms:  'mysql'
+            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='freenaturestock-2111.jpg')
+
+  # Demo Background Image #2
+  - changeSet:
+      id: 1.0.6
+      author: isaiahv
+      changes:
+        - sql:
+            dbms:  'mysql'
+            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='freenaturestock-2138.jpg'
+      rollback:
+        - sql:
+            dbms:  'mysql'
+            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='freenaturestock-2138.jpg')
+
+  # Demo Link Google
+  - changeSet:
+      id: 1.0.7
+      author: isaiahv
+      changes:
+        - sql:
+            dbms:  'mysql'
+            sql: INSERT INTO link (image_id, name, href) SELECT id, 'Google' AS name, 'https://www.google.com' FROM image WHERE path='/link/Google' AND filename='google.png'
+      rollback:
+        - sql:
+            dbms:  'mysql'
+            sql: DELETE FROM link WHERE name='Google'
+  
+  # Demo Link Yahoo
+  - changeSet:
+      id: 1.0.8
+      author: isaiahv
+      changes:
+        - sql:
+            dbms:  'mysql'
+            sql: INSERT INTO link (image_id, name, href) SELECT id, 'Yahoo' AS name, 'https://www.yahoo.com/' FROM image WHERE path='/link/Yahoo' AND filename='yahoo.png'
+      rollback:
+        - sql:
+            dbms:  'mysql'
+            sql: DELETE FROM link WHERE name='Yahoo'
+
+  # Demo Link Bing
+  - changeSet:
+      id: 1.0.9
+      author: isaiahv
+      changes:
+        - sql:
+            dbms:  'mysql'
+            sql: INSERT INTO link (image_id, name, href) SELECT id, 'Bing' AS name, 'https://www.bing.com/' FROM image WHERE path='/link/Bing' AND filename='bing.png'
+      rollback:
+        - sql:
+            dbms:  'mysql'
+            sql: DELETE FROM link WHERE name='Bing'

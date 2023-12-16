@@ -18,7 +18,9 @@ function App() {
 
   return (
     <div className="App" style={{
-      backgroundImage: initInfo.background ? `url(${service.host + initInfo.background.url})` : "unset"
+      backgroundImage: initInfo.background ? `url(${service.host + initInfo.background.url})` : "unset",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover"
     }}>
       {initInfo.links.map(function(link, i) {
         return <Link key={link.href} name={link.name} href={link.href} icon={link.icon ? service.host+link.icon : undefined}/>
