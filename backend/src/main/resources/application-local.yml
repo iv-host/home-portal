@@ -6,3 +6,9 @@ spring:
     url: jdbc:mysql://localhost:3306/home?allowPublicKeyRetrieval=true
     username: home
     password: password
+
+
+springdoc:
+  api-docs:
+    resolve-schema-properties: true
+  writer-with-order-by-keys: true

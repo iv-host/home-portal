@@ -1,11 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("be.filipblondeel.gradle:gradle-gulp-plugin:0.1")
-    }
-}
 plugins {
     kotlin("jvm") version "1.8.20"
     kotlin("plugin.spring") version "1.8.20"

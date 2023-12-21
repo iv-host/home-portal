@@ -1,5 +1,6 @@
 package org.ivcode.homeportal.controllers
 
+import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.commons.lang3.StringUtils
 import org.ivcode.homeportal.services.models.ImagePath
@@ -23,6 +24,8 @@ class ImageController (
     private val imageService: ImageService
 ) {
 
+
+    @Hidden
     @RequestMapping(method = [RequestMethod.GET], path = ["/**"])
     fun getImage(
         request: HttpServletRequest

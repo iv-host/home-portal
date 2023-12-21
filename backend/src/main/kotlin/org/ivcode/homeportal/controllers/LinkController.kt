@@ -1,5 +1,7 @@
 package org.ivcode.homeportal.controllers
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.ivcode.homeportal.services.models.CreateLinkRequest
 import org.ivcode.homeportal.services.models.Link
 import org.ivcode.homeportal.services.LinkService
@@ -8,17 +10,20 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
+@Tag(name="link-controller", description = "operations related to creating and deleting links")
 @RestController
 @RequestMapping("/api/links")
 class LinkController(
     private val linkService: LinkService
 ) {
 
+    @Operation(description = "Lists all links available to the current user")
     @GetMapping
     fun getUserLinks(): List<Link> {
         return linkService.getAllLinks()
     }
 
+    @Operation(description = "Creates a new link")
     @PostMapping (path= ["/{name}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun postApp(
         @PathVariable("name") name: String,
@@ -38,6 +43,7 @@ class LinkController(
         return linkService.createLink(request)
     }
 
+    @Operation(description = "Deletes a link")
     @DeleteMapping(path = ["/{name}"])
     fun deleteApp(
         @PathVariable name: String
