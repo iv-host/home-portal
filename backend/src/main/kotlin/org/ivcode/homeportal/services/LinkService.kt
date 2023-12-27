@@ -1,5 +1,7 @@
 package org.ivcode.homeportal.services
 
+import org.ivcode.homeportal.exceptions.BadRequestException
+import org.ivcode.homeportal.exceptions.InternalServerErrorException
 import org.ivcode.homeportal.exceptions.NotFoundException
 import org.ivcode.homeportal.services.models.CreateLinkRequest
 import org.ivcode.homeportal.services.models.Link
@@ -9,6 +11,7 @@ import org.ivcode.homeportal.utils.toImagePath
 import org.ivcode.homeportal.utils.toLink
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class LinkService (
@@ -18,7 +21,7 @@ class LinkService (
 
     @Transactional
     fun getAllLinks(): List<Link> {
-        return linkDao.getLinkIcons().map { l -> l.toLink() }
+        return linkDao.getLinkIcons().map { l -> l.toLink() }.sortedBy { it.name }
     }
 
     @Transactional
@@ -53,7 +56,11 @@ class LinkService (
     fun deleteLink(name: String) {
         val linkIcon = linkDao.getLinkIcon(name) ?: throw NotFoundException()
 
-        linkDao.deleteLink(name)
+        val count = linkDao.deleteLink(name)
+        if(count!=1) {
+           throw InternalServerErrorException()
+        }
+
         if(linkIcon.image!=null) {
             imageService.deleteImage(linkIcon.image.path!!, linkIcon.image.filename!!)
         }

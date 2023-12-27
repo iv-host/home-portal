@@ -55,6 +55,10 @@ class ImageService (
         }
     }
 
+    @Transactional
+    fun deleteImages(imageIds: List<Long>): Int =
+        imageDao.deleteImagesById(imageIds)
+
     fun parseImagePath(urlPath: String): ImagePath {
         val index = urlPath.lastIndexOf('/')
         return if(index==-1) {

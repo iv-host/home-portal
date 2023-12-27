@@ -30,6 +30,14 @@ const val DELETE_IMAGE = """
     WHERE path=#{path} AND filename=#{filename}
 """
 
+const val DELETE_IMAGES_BY_ID = """<script>
+    DELETE FROM image
+    WHERE
+        <foreach item="id" index="index" collection="imageIds" open="id IN (" separator="," close=")" nullable="true">
+            #{id}
+        </foreach>
+</script>"""
+
 @Mapper
 interface ImageDao {
 
@@ -45,4 +53,7 @@ interface ImageDao {
 
     @Delete(DELETE_IMAGE)
     fun deleteImage(path: String, filename: String): Int
+
+    @Delete(DELETE_IMAGES_BY_ID)
+    fun deleteImagesById(imageIds: List<Long>): Int
 }

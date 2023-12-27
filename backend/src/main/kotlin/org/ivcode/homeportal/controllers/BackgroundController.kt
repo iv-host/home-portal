@@ -15,6 +15,9 @@ class BackgroundController(
     @GetMapping
     fun getBackgroundImages() = backgroundService.getBackgroundImages()
 
+    @GetMapping("/random")
+    fun getRandomBackgroundImage() = backgroundService.getRandomBackgroundImage()
+
     @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     fun createBackgroundImage(@RequestParam("image") multipartFile: MultipartFile) = backgroundService.createBackgroundImage(CreateImageRequest(
         mime = multipartFile.contentType,

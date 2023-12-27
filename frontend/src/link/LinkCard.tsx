@@ -1,14 +1,14 @@
 import React from 'react';
-import './Link.css';
+import './LinkCard.css';
 import noimage from './noimage.png'
 
-export interface LinkProps {
+export interface LinkCardProps {
   name: string;
   href: string;
   icon?: string;
 }
 
-export const Link = ({ name, href, icon }: LinkProps) => {
+export const LinkCard = ({ name, href, icon }: LinkCardProps) => {
   return <>
     <a className='link' tabIndex={0} href={href}>
       <div className='image'>

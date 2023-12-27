@@ -8,3 +8,9 @@ class NotFoundException: RuntimeException()
 
 @ResponseStatus(HttpStatus.CONFLICT)
 class ConflictException: RuntimeException()
+
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class BadRequestException: RuntimeException()
+
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+class InternalServerErrorException: RuntimeException()

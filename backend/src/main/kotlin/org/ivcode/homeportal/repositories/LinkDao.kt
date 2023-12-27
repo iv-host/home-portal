@@ -13,6 +13,14 @@ private const val DELETE_LINK = """
     DELETE FROM link WHERE name=#{name} 
 """
 
+private const val DELETE_LINKS_BY_ID = """<script>
+    DELETE FROM link
+    WHERE
+        <foreach item="id" index="index" collection="linkIds" open="id IN (" separator="," close=")" nullable="true">
+            #{id}
+        </foreach>
+</script>"""
+
 private const val SELECT_LINK_ICONS = """
     SELECT
         link.id as link_id,
@@ -25,6 +33,23 @@ private const val SELECT_LINK_ICONS = """
     FROM
         link LEFT JOIN image ON link.image_id=image.id 
 """
+
+private const val SELECT_LINK_ICONS_BY_NAME = """<script>
+    SELECT
+        link.id as link_id,
+        link.name as link_name,
+        link.href as link_href,
+        image.id as image_id,
+        image.mime as image_mime,
+        image.path as image_path,
+        image.filename as image_filename
+    FROM
+        link LEFT JOIN image ON link.image_id=image.id
+    WHERE
+        <foreach item="name" index="index" collection="names" open="link.name IN (" separator="," close=")" nullable="true">
+            #{name}
+        </foreach>
+</script>"""
 
 private const val SELECT_LINK_ICON = """
     SELECT
@@ -54,6 +79,16 @@ interface LinkDao {
     @Result(property = "image.filename", column = "image_filename")
     fun getLinkIcons(): List<LinkIconEntity>
 
+    @Select(SELECT_LINK_ICONS_BY_NAME)
+    @Result(property = "link.id", column = "link_id")
+    @Result(property = "link.name", column = "link_name")
+    @Result(property = "link.href", column = "link_href")
+    @Result(property = "image.id", column = "image_id")
+    @Result(property = "image.mime", column = "image_mime")
+    @Result(property = "image.path", column = "image_path")
+    @Result(property = "image.filename", column = "image_filename")
+    fun getLinkIconsByName(names: List<String>): List<LinkIconEntity>
+
     @Select(SELECT_LINK_ICON)
     @Result(property = "link.id", column = "link_id")
     @Result(property = "link.name", column = "link_name")
@@ -70,4 +105,7 @@ interface LinkDao {
 
     @Delete(DELETE_LINK)
     fun deleteLink(name: String): Int
+
+    @Delete(DELETE_LINKS_BY_ID)
+    fun deleteLinksById(linkIds: List<Long>): Int
 }

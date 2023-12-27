@@ -1,30 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { Link } from './link/Link';
-import { InitInfo, LinkService } from './services/LinksService';
+import { LinkCard } from './link/LinkCard';
+import { Link, BackgroundImage, LinkService } from './services/LinksService';
 import { getConfig } from "./config/config";
+import { SettingsButton } from './settings/SettingsButton';
 
 function App() {
-  const [ initInfo, setInitInfo] = useState<InitInfo>({background:undefined, links:[]})
+  const [ links, setLinks ] = useState<Link[]>([])
+  const [ background, setBackground] = useState<BackgroundImage>()
+
   const { service } = getConfig()
-  
+
+  const loadLinks = async () => {
+    const newLinks = await LinkService.getLinks()
+    setLinks(newLinks)
+  }
+
+  const loadBackground = async () => {
+    const newBackground = await LinkService.getRandomBackground()
+    setBackground(newBackground)
+  }
+
   useEffect(() => {
-    const load = async () => {
-      const initInfo = await LinkService.getInit();
-      setInitInfo(initInfo)
-    }
-    load()
+    loadBackground()
+    loadLinks()
   }, [])
 
   return (
     <div className="App" style={{
-      backgroundImage: initInfo.background ? `url(${service.host + initInfo.background.url})` : "unset",
+      backgroundImage: background ? `url(${service.host + background.url})` : "unset",
       backgroundRepeat: "no-repeat",
       backgroundSize: "cover"
     }}>
-      {initInfo.links.map(function(link, i) {
-        return <Link key={link.href} name={link.name} href={link.href} icon={link.icon ? service.host+link.icon : undefined}/>
+      {links.map(function(link, i) {
+        return <LinkCard key={link.href} name={link.name} href={link.href} icon={link.icon ? service.host+link.icon : undefined}/>
       })}
+      
+      <div><SettingsButton onLinksUpdated={()=> {loadLinks()}}/></div>  
     </div>
   );
 }
