@@ -2,7 +2,7 @@ databaseChangeLog:
 
   # Image Table
   - changeSet:
-      id: 1.0.1
+      id: 0.1.1
       author: isaiahv
       changes:
         - createTable:
@@ -42,7 +42,7 @@ databaseChangeLog:
 
   # Link Table
   - changeSet:
-      id: 1.0.2
+      id: 0.1.2
       author: isaiahv
       changes:
         - createTable:
@@ -80,7 +80,7 @@ databaseChangeLog:
 
   # Background Table
   - changeSet:
-      id: 1.0.3
+      id: 0.1.3
       author: isaiahv
       changes:
         - createTable:
@@ -106,7 +106,7 @@ databaseChangeLog:
 
   # Demo Image Data
   - changeSet:
-      id: 1.0.4
+      id: 0.1.4
       author: isaiahv
       changes:
         - insert:
@@ -187,7 +187,7 @@ databaseChangeLog:
 
   # Demo Background Image #1
   - changeSet:
-      id: 1.0.5
+      id: 0.1.5
       author: isaiahv
       changes:
         - sql:
@@ -200,7 +200,7 @@ databaseChangeLog:
 
   # Demo Background Image #2
   - changeSet:
-      id: 1.0.6
+      id: 0.1.6
       author: isaiahv
       changes:
         - sql:
@@ -213,12 +213,12 @@ databaseChangeLog:
 
   # Demo Link Google
   - changeSet:
-      id: 1.0.7
+      id: 0.1.7
       author: isaiahv
       changes:
         - sql:
             dbms:  'mysql'
-            sql: INSERT INTO link (image_id, name, href) SELECT id, 'Google' AS name, 'https://www.google.com' FROM image WHERE path='/link/Google' AND filename='google.png'
+            sql: INSERT INTO link (image_id, name, href) SELECT id, 'Google' AS name, 'https://www.google.com/' FROM image WHERE path='/link/Google' AND filename='google.png'
       rollback:
         - sql:
             dbms:  'mysql'
@@ -226,7 +226,7 @@ databaseChangeLog:
   
   # Demo Link Yahoo
   - changeSet:
-      id: 1.0.8
+      id: 0.1.8
       author: isaiahv
       changes:
         - sql:
@@ -239,7 +239,7 @@ databaseChangeLog:
 
   # Demo Link Bing
   - changeSet:
-      id: 1.0.9
+      id: 0.1.9
       author: isaiahv
       changes:
         - sql:

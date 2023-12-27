@@ -1,6 +1,5 @@
 package org.ivcode.homeportal.services
 
-import org.ivcode.homeportal.exceptions.BadRequestException
 import org.ivcode.homeportal.exceptions.InternalServerErrorException
 import org.ivcode.homeportal.exceptions.NotFoundException
 import org.ivcode.homeportal.services.models.CreateLinkRequest
@@ -11,7 +10,6 @@ import org.ivcode.homeportal.utils.toImagePath
 import org.ivcode.homeportal.utils.toLink
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 @Service
 class LinkService (

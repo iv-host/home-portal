@@ -2,7 +2,7 @@
 
 pushd /database || exit 1;
 /liquibase/liquibase \
-  --changelog-file "org/ivcode/homeportal/changelog/db.changelog-root.yml" \
+  --changelog-file "db.changelog-root.yml" \
   --url $DATABASE_URL \
   --username $DATABASE_USERNAME \
   --password $DATABASE_PASSWORD \

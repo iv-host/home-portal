@@ -3,9 +3,9 @@
   "version": "0.1-SNAPSHOT",
   "description": "",
   "scripts": {
-    "demo": "npm run build-image && npm run demo:start",
-    "demo:start": "cd scripts/demo && docker-compose up -d",
-    "demo:stop": "cd scripts/demo && docker-compose down",
+    "demo": "npm run build-image && npm run demo:up",
+    "demo:up": "cd scripts/demo && docker-compose up -d",
+    "demo:down": "cd scripts/demo && docker-compose down",
     "build": "scripts/build/build.sh;",
     "build-in-docker": "npm run build-in-docker:image && scripts/build-in-docker/build.sh;",
     "build-in-docker:image": "scripts/build-in-docker/build-image.sh",

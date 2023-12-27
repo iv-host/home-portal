@@ -31,7 +31,7 @@ services:
       - ../../database:/liquibase/changelog:ro
     command: [
       "--url=jdbc:mysql://db:3306/home?allowPublicKeyRetrieval=true&autoReconnect=true&maxReconnects=20",
-      "--changeLogFile=org/ivcode/homeportal/changelog/db.changelog-root.yml",
+      "--changeLogFile=db.changelog-root.yml",
       "--username=home",
       "--password=password",
       "update"
