@@ -1,12 +1,10 @@
 import * as React from 'react';
 
-import Fab from '@mui/material/Fab';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { SettingsDialog } from './SettingsDialog'
+import IconButton from '@mui/material/IconButton';
 
 export interface SettingsButtonProps {
-  onOpen?: () => void,
-  onClose?: () => void,
   onLinksUpdated?: () => void,
 }
 
@@ -15,25 +13,24 @@ export const SettingsButton = (props: SettingsButtonProps) => {
   
   const handleOpen = () => {
     setOpen(true)
-    
-    if(props.onOpen) {
-      props.onOpen()
-    }
   }
 
   const handleClose = () => {
     setOpen(false)
-
-    if(props.onClose) {
-      props.onClose()
-    }
   }
 
   return (
     <>
-      <Fab size='medium' onClick={handleOpen}>
-        <SettingsIcon/>
-      </Fab>
+      <IconButton
+              onClick={handleOpen}
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+            >
+              <SettingsIcon />
+            </IconButton>
       <SettingsDialog 
         open={open}
         onClose={handleClose}
