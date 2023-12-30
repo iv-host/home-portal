@@ -30,6 +30,17 @@ class MyLinksService {
     return await response.text()
   }
 
+  async addBackground(form: FormData): Promise<void> {
+    const response = await fetch(this.url + '/bg', {
+      method: 'POST',
+      body: form
+    });
+
+    if(!response.ok) {
+      throw response.statusText
+    }
+  }
+
   async getRandomBackground(): Promise<BackgroundImage> {
     const response = await fetch(this.url + '/bg/random', {
       method: 'GET',
@@ -39,6 +50,27 @@ class MyLinksService {
     });
 
     return (await response.json()) as BackgroundImage
+  }
+
+  async getBackgrounds(): Promise<BackgroundImage[]> {
+    const response = await fetch(this.url + '/bg', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return (await response.json()) as BackgroundImage[]
+  }
+
+  async deleteBackground(name: string): Promise<void> {
+    const response = await fetch(this.url + `/bg/${name}`, {
+      method: 'DELETE',
+    });
+
+    if(!response.ok) {
+      throw response.statusText
+    }
   }
 
   async getLinks(): Promise<Link[]> {

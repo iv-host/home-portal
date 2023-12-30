@@ -3,7 +3,6 @@ import './App.css';
 import { LinkCard } from './link/LinkCard';
 import { Link, BackgroundImage, LinkService } from './services/LinksService';
 import { getConfig } from "./config/config";
-import { SettingsButton } from './settings/SettingsButton';
 import SearchAppBar from './SearchAppBar';
 
 function App() {
@@ -28,7 +27,11 @@ function App() {
   }, [])
 
   return (<div className='App'>
-    <SearchAppBar links={links} onLinksUpdated={loadLinks} />
+    <SearchAppBar 
+      links={links}
+      onLinksUpdated={loadLinks}
+      background={background}
+      onSelectBackground={setBackground} />
     <div  style={{
       backgroundImage: background ? `url(${service.host + background.url})` : "unset",
       backgroundRepeat: "no-repeat",

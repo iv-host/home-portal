@@ -22,7 +22,7 @@ class BackgroundService(
     fun getBackgroundImages() = backgroundDao.selectBackgroundImages().map { bg -> bg.toBackgroundImage() }
 
     @Transactional
-    fun getRandomBackgroundImage() = getBackgroundImages().randomOrNull()
+    fun getRandomBackgroundImage(): BackgroundImage = getBackgroundImages().randomOrNull() ?: throw NotFoundException()
 
     @Transactional
     fun createBackgroundImage(request: CreateImageRequest): BackgroundImage {

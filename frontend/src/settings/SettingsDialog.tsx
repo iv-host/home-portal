@@ -10,6 +10,8 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import { InfoTab } from './InfoTab';
 import { LinkTab } from './LinksTab';
+import { BackgroundsTab } from './BackgroundsTab';
+import { BackgroundImage } from '../services/LinksService';
 
 
 const LargeDialog = styled(Dialog)(({ theme }) => ({
@@ -22,6 +24,8 @@ export interface SettingsDialogProps {
   open: boolean,
   onClose?: () => void,
   onLinksUpdated?: () => void,
+  background: BackgroundImage | undefined,
+  onSelectBackground?: (bg: BackgroundImage | undefined) => void
 }
 
 export const SettingsDialog = (props: SettingsDialogProps) => {
@@ -71,21 +75,18 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
             <div
                 role="tabpanel"
                 hidden={value !== 0}
-                style={{width: "100%"}}
-              >
+                style={{width: "100%"}}>
               <LinkTab onLinksUpdated={props.onLinksUpdated} />
             </div>
             <div
                 role="tabpanel"
-                hidden={value !== 1}
-              >
-              Two
+                hidden={value !== 1}>
+              <BackgroundsTab {...props} />
             </div>
             <div
                 role="tabpanel"
-                hidden={value !== 2}
-              >
-                <InfoTab/>
+                hidden={value !== 2}>
+              <InfoTab/>
             </div>
           </Box>
         </DialogContent>

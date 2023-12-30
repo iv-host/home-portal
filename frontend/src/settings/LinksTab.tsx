@@ -17,8 +17,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import { visuallyHidden } from '@mui/utils';
 import { Link, LinkService } from '../services/LinksService';
-import { ConfirmationDialog } from '../ConfirmationDialog';
 import { CreateLinkDialog } from './CreateLinkDialog';
+import { DeleteDialog } from './DeleteDialog';
 
 interface Row {
   id: number,
@@ -209,43 +209,6 @@ export const TextFieldWrapper = (props: TextFieldWrapperProps) => {
     focused
     defaultValue={props.defaultValue}
     onBlur={props.onBlur}
-  />
-}
-
-interface DeleteDialogProps {
-  open: boolean,
-  onClose: () => void,
-  message: string
-  onAnimationEnd?: React.AnimationEventHandler<HTMLDivElement>
-  doDelete: () => Promise<void>
-}
-
-const DeleteDialog = (props: DeleteDialogProps) => {
-  const { open, onClose, message } = props
-  const [busy, setBusy] = React.useState<boolean>(false);
-
-  React.useEffect(() => {
-    if(open) {
-      setBusy(false)
-    }
-  }, [open])
-
-  const handleDelete = (accept: boolean) => {
-    if(accept) {
-      setBusy(true)
-      props.doDelete().then(()=>onClose())
-    } else {
-      onClose()
-    }
-  }
-
-  return <ConfirmationDialog
-    open = {open}
-    busy = {busy}
-    title = 'Delete Link'
-    message = { message }
-    onAnimationEnd={props.onAnimationEnd}
-    onClose={handleDelete}
   />
 }
 

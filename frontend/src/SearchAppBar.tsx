@@ -5,7 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { SettingsButton } from './settings/SettingsButton';
-import { Link } from './services/LinksService';
+import { BackgroundImage, Link } from './services/LinksService';
 import { SearchBar } from './SearchBar';
 
 
@@ -29,6 +29,8 @@ const lightTheme = createTheme({
 export interface SearchAppBarProps {
   links: Link[],
   onLinksUpdated?: () => void,
+  background: BackgroundImage | undefined,
+  onSelectBackground?: (bg: BackgroundImage | undefined) => void
 }
 
 export default function SearchAppBar(props: SearchAppBarProps) {
@@ -39,7 +41,7 @@ export default function SearchAppBar(props: SearchAppBarProps) {
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <SettingsButton onLinksUpdated={props.onLinksUpdated}/>
+            <SettingsButton {...props} />
             <Typography
               variant="h6"
               noWrap

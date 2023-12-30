@@ -3,8 +3,11 @@ import * as React from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { SettingsDialog } from './SettingsDialog'
 import IconButton from '@mui/material/IconButton';
+import { BackgroundImage } from '../services/LinksService';
 
 export interface SettingsButtonProps {
+  background: BackgroundImage | undefined,
+  onSelectBackground?: (bg: BackgroundImage | undefined) => void
   onLinksUpdated?: () => void,
 }
 
@@ -34,7 +37,7 @@ export const SettingsButton = (props: SettingsButtonProps) => {
       <SettingsDialog 
         open={open}
         onClose={handleClose}
-        onLinksUpdated={props.onLinksUpdated}
+        {...props}
       />
     </>
   );

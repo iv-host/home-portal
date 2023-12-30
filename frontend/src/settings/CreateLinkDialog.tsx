@@ -55,7 +55,7 @@ export const CreateLinkDialog = (props: CreateLinkDialogProps) => {
           }}
         >
           <CloseIcon />
-        </IconButton>
+    </IconButton>
     <DialogContent>
       <Box
         id="create-link-form"
