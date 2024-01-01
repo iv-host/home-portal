@@ -1,20 +1,38 @@
+
 spring:
+
   servlet.multipart:
     max-file-size: 100MB
     max-request-size: 100MB
+
   datasource:
     url: jdbc:mysql://localhost:3306/home?allowPublicKeyRetrieval=true
     username: home
     password: password
 
+security:
+  oauth2:
+    enabled: true
+    admin: email("admin@domain.com")
+    issuer-url: http://localhost:8081/auth/realms/master
+    client:
+      authorization-url: http://localhost:8081/auth/realms/master/protocol/openid-connect/auth
+      token-url: http://localhost:8081/auth/realms/master/protocol/openid-connect/token
+      client-id: home-portal
+      client-secret: EYm1bCnTp35MN8Phqe7hB97gj3zPwIwJ
+      scope: ~
 
 springdoc:
   api-docs:
     resolve-schema-properties: true
   writer-with-order-by-keys: true
 
+
+
 logging:
   level:
+    httpclient.wire: DEBUG
     org.springframework: WARN
     org.ivcode: DEBUG
+
   file: logs/spring-boot-logging.log

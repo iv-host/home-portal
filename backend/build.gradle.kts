@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.8.20"
     kotlin("plugin.spring") version "1.8.20"
-    id("org.springframework.boot") version "3.1.6"
+    id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.0"
     application
 }
@@ -19,10 +19,16 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-jackson:2.9.0")
 
 
     implementation("org.apache.commons:commons-lang3")
+    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+
 
     implementation("org.mybatis:mybatis:3.5.14")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
@@ -30,6 +36,8 @@ dependencies {
     implementation("mysql:mysql-connector-java:8.0.33")
 
     testImplementation(kotlin("test"))
+    testImplementation("org.mockito:mockito-core:5.8.0")
+
 }
 
 fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): Int {
@@ -42,6 +50,11 @@ fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): 
     }.exitValue
 }
 
+/**
+ * If the "withFrontend" parameter is defined, the frontend is built into the jar
+ *
+ * Note: npm isn't in the classpath when running Gradle in IntelliJ. Running with this property in IntelliJ results in errors
+ */
 if(project.hasProperty("withFrontend")) {
     val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
     val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile

@@ -14,3 +14,9 @@ class BadRequestException: RuntimeException()
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 class InternalServerErrorException: RuntimeException()
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+class UnauthorizedException: RuntimeException()
+
+@ResponseStatus(HttpStatus.FORBIDDEN)
+class ForbiddenException: RuntimeException()
