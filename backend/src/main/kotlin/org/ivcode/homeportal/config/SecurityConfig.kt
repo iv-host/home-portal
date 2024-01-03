@@ -26,6 +26,14 @@ class SecurityConfig {
     @Bean
     @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "false", matchIfMissing = true)
     fun disabledSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http {
+            authorizeHttpRequests {
+                authorize(anyRequest, permitAll)
+            }
+            csrf {
+                disable()
+            }
+        }
         return http.build()
     }
 

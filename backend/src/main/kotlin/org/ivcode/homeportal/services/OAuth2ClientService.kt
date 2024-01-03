@@ -9,10 +9,12 @@ import org.ivcode.homeportal.exceptions.InternalServerErrorException
 import org.ivcode.homeportal.exceptions.UnauthorizedException
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import java.net.URI
 
 @Service
+@ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
 class OAuth2ClientService(
     private val oAuth2TokenApi: OAuth2TokenApi,
     @Qualifier("oauth2.redirect-path") private val redirectPath: String,

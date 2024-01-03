@@ -5,6 +5,7 @@ import org.ivcode.homeportal.api.OAuth2TokenApi
 import org.ivcode.homeportal.controllers.PATH_OAUTH2
 import org.ivcode.homeportal.controllers.PATH_OAUTH2_REDIRECT
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import retrofit2.Retrofit
@@ -12,6 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 
 
 @Configuration
+@ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
 class OAuth2ClientConfig {
 
     @Bean("oauth2.redirect-path")

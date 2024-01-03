@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class SpringDocConfig(
     @Qualifier("version") private val version: String,
-    @Value("\${security.oauth2.enabled}") private val isOAuthEnabled: Boolean,
-    @Value("\${security.oauth2.client.authorization-url}") private val authorizationUrl: String,
-    @Value("\${security.oauth2.client.token-url}") private val tokenUrl: String,
+    @Value("\${security.oauth2.enabled:false}") private val isOAuthEnabled: Boolean,
+    @Value("\${security.oauth2.client.authorization-url:#{null}}") private val authorizationUrl: String?,
+    @Value("\${security.oauth2.client.token-url:#{null}}") private val tokenUrl: String?,
 ) {
 
 
