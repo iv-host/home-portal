@@ -27,6 +27,7 @@ const lightTheme = createTheme({
 
 
 export interface SearchAppBarProps {
+  enableSettings: boolean,
   links: Link[],
   onLinksUpdated?: () => void,
   background: BackgroundImage | undefined,
@@ -41,7 +42,7 @@ export default function SearchAppBar(props: SearchAppBarProps) {
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <SettingsButton {...props} />
+            {props.enableSettings && <SettingsButton {...props} />}
             <Typography
               variant="h6"
               noWrap

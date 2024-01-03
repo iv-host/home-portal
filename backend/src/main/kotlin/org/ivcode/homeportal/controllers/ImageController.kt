@@ -16,7 +16,7 @@ import org.springframework.web.servlet.HandlerMapping
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.net.URLDecoder.decode
 
-const val IMAGE_CONTROLLER_PATH = "/api/img"
+const val IMAGE_CONTROLLER_PATH = "/img"
 
 @RestController
 @RequestMapping(IMAGE_CONTROLLER_PATH)
