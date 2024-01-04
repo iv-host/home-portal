@@ -9,6 +9,8 @@ import Fab from '@mui/material/Fab';
 import Tooltip from '@mui/material/Tooltip';
 import { DeleteDialog, DeleteDialogProps } from "./DeleteDialog";
 import { AddBackgroundForm } from "./AddBackgroundForm";
+import { request } from "../services/ServiceResponse";
+import { nop } from "../utils/FunctionUtils";
 
 const ImageCardContainer = styled("div")(({ theme }) => ({
   display: "flex"
@@ -53,11 +55,12 @@ const BackgroundCard = (props: BackgroundCardProps) => {
     }
   }
 
-  return <div style={{position: "relative"}}>
+  return <div 
+    style={{position: "relative"}}>
 
     <ImageCard className={selected ? "selected" : ""} onClick={handleClick}>
       <div style={{display: "grid", justifyContent: "center"}}>
-        <div 
+        <div
           style={{
             height: `${props.height}px`,
             width: `${props.width}px`,
@@ -97,21 +100,19 @@ const CreateNewImageCard = (props: CreateNewImageCardProps) => {
 
 export interface BackgroundsTabProps {
   background: BackgroundImage | undefined,
-  onSelectBackground?: (bg: BackgroundImage | undefined) => void
+  onSelectBackground?: (bg: BackgroundImage | undefined) => void,
+  onError?: (msg: string) => void
 }
 
 export const BackgroundsTab = (props: BackgroundsTabProps) => {
-  const [backgrounds, setBackgrounds] = React.useState<BackgroundImage[]>([])
+  const [backgrounds, setBackgrounds] = React.useState<BackgroundImage[]>()
   const [deleteDialogProps, setDeleteDialogProps] = React.useState<DeleteDialogProps<{bg: BackgroundImage, index: number}>>({
     open: false
   })
 
-  const loadBackgrounds = async (): Promise<BackgroundImage[]> => {
-    const newBackgrounds = await LinkService.getBackgrounds()
-    setBackgrounds(newBackgrounds)
-
-    return newBackgrounds;
-  }
+  const loadBackgrounds = () => request(LinkService.getBackgrounds(),
+    bgs => setBackgrounds(bgs),
+    msg => props.onError ? props.onError(msg) : {})
 
   const compare = (bg1: BackgroundImage, bg2: BackgroundImage | undefined) => {
     return bg2 !== undefined
@@ -130,18 +131,22 @@ export const BackgroundsTab = (props: BackgroundsTabProps) => {
     })
   }
 
-  const handleUpload = async (form: FormData) => {
-    await LinkService.addBackground(form)
-    await loadBackgrounds()
-  }
+  const handleUpload = async (form: FormData) => await request(LinkService.addBackground(form),
+    async _ => await loadBackgrounds(),
+    msg=>props.onError ? props.onError(msg) : nop());
 
   const handleDelete = async (item: {bg: BackgroundImage, index: number} | undefined) => {
     const {bg, index} = item!
-    await LinkService.deleteBackground(bg.filename)
+    
+    await request(LinkService.deleteBackground(bg.filename),
+      undefined,
+      msg => props.onError ? props.onError(msg) : {}
+    )
+
     const backgrounds = await loadBackgrounds()
     
     if(props.onSelectBackground) {
-      if(backgrounds.length === 0 ) {
+      if(backgrounds===undefined || backgrounds.length === 0 ) {
         props.onSelectBackground(undefined)
       } else if(index >= backgrounds.length) {
         props.onSelectBackground(backgrounds[backgrounds.length-1])
@@ -165,8 +170,9 @@ export const BackgroundsTab = (props: BackgroundsTabProps) => {
   return <>
     <DeleteDialog {...deleteDialogProps} />
     <ImageCardContainer>
-      {backgrounds.map((bg, index) => {
+      {backgrounds && backgrounds.map((bg, index) => {
         return <BackgroundCard
+          key={`${bg.filename}`}
           height={imgHeight}
           width={imgWidth}
           background={bg}

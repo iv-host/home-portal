@@ -27,6 +27,7 @@ a.link > div.image {
 }
 
 a.link .icon {
+  margin: auto;
   width: 45px;
   height: 60px;
 }

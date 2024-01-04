@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 import { ReactElement } from 'react';
 import styled from '@emotion/styled'
 import { LinkService } from '../services/LinksService';
+import { request } from '../services/ServiceResponse';
+import { nop } from '../utils/FunctionUtils';
 
 const ItemDiv = styled.div`
   display: flex;
@@ -32,15 +34,18 @@ const Item = (props: React.PropsWithChildren<{icon: ReactElement}>) => {
   </ItemDiv>
 }
 
-export const InfoTab = () => {
-  const [version, setVersion] = React.useState<string>("")
+export interface InfoTabProps {
+  onError?: (msg: string) => void
+}
+
+export const InfoTab = (props: InfoTabProps) => {
+  const [version, setVersion] = React.useState<string>()
   
   React.useEffect(() => {
-    const load = async () => {
-      const version = await LinkService.getVersion()
-      setVersion(version)
-    }
-    load()
+    request(LinkService.getVersion(),
+      v => setVersion(v),
+      msg => props.onError ? props.onError(msg) : nop()
+    )
   }, [])
 
 

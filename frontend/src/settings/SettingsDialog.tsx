@@ -26,6 +26,7 @@ export interface SettingsDialogProps {
   onLinksUpdated?: () => void,
   background: BackgroundImage | undefined,
   onSelectBackground?: (bg: BackgroundImage | undefined) => void
+  onError?: (msg: string) => void
 }
 
 export const SettingsDialog = (props: SettingsDialogProps) => {
@@ -76,7 +77,7 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
                 role="tabpanel"
                 hidden={value !== 0}
                 style={{width: "100%"}}>
-              <LinkTab onLinksUpdated={props.onLinksUpdated} />
+              <LinkTab {...props} />
             </div>
             <div
                 role="tabpanel"
@@ -86,7 +87,7 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
             <div
                 role="tabpanel"
                 hidden={value !== 2}>
-              <InfoTab/>
+              <InfoTab {...props} />
             </div>
           </Box>
         </DialogContent>

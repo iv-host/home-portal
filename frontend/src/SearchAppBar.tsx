@@ -32,6 +32,7 @@ export interface SearchAppBarProps {
   onLinksUpdated?: () => void,
   background: BackgroundImage | undefined,
   onSelectBackground?: (bg: BackgroundImage | undefined) => void
+  onError?: (msg: string) => void
 }
 
 export default function SearchAppBar(props: SearchAppBarProps) {

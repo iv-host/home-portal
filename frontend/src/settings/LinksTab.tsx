@@ -19,6 +19,7 @@ import { visuallyHidden } from '@mui/utils';
 import { Link, LinkService } from '../services/LinksService';
 import { CreateLinkDialog } from './CreateLinkDialog';
 import { DeleteDialog } from './DeleteDialog';
+import { request } from '../services/ServiceResponse';
 
 interface Row {
   id: number,
@@ -184,6 +185,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 export interface LinkTabProps {
   onLinksUpdated?: () => void,
+  onError?: (msg: string) => void,
 }
 
 
@@ -224,11 +226,12 @@ export const LinkTab = (props: LinkTabProps) => {
 
   const [createLinkDialog_open, setCreateLinkDialog_open] = React.useState(false);
 
-  const load = async () => {
-    const newLinks = await LinkService.getLinks()
-    setLinks(newLinks)
-    setRows(createRowArray(newLinks))
-  }
+  const load = () => request(LinkService.getLinks(), 
+    (links) => {    
+      setLinks(links!)
+      setRows(createRowArray(links!))
+    },
+    (msg) => {if(props.onError) {props.onError(msg)}})
 
   React.useEffect(() => {
     load()

@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { expireCookie, parseCookies } from "../utils/CookieUtils";
+import { ServiceResponse, createLoginResponse } from "./ServiceResponse";
 
 const ACCESS_TOKEN_COOKIE = "access-token"
 const REFRESH_TOKEN_COOKIE = "refresh-token"
@@ -17,10 +18,6 @@ interface OAuth2TokenResponse {
     'not-before-policy'?: number,
     session_state?: string,
     scope?: string
-}
-
-export interface OAuthException {
-  message: string
 }
 
 class OAuth2ClientServiceImpl {
@@ -42,12 +39,14 @@ class OAuth2ClientServiceImpl {
     }
   }
 
-  async call(request: (authorization:string | undefined)=>Promise<Response>): Promise<Response> {
+  async call<T>(request: (authorization:string | undefined)=>Promise<ServiceResponse<T>>): Promise<ServiceResponse<T>> {
     if(!this.getAccessToken() && !this.getAccessToken()) {
       // oauth may be disabled
 
       const response = await request(undefined)
-      this.loginOnUnauthorized(response)
+      if(this.loginOnUnauthorized(response)) {
+        return createLoginResponse()
+      }
 
       // If the response wasn't a 401, then everything is good. And if not good, it's not an OAuth issue
       return response
@@ -63,6 +62,9 @@ class OAuth2ClientServiceImpl {
       
     const response = await request(`Bearer ${this.getAccessToken()}`)
     this.loginOnUnauthorized(response)
+    if(this.loginOnUnauthorized(response)) {
+      return createLoginResponse()
+    }
 
     return response
   }
@@ -116,7 +118,6 @@ class OAuth2ClientServiceImpl {
 
   private login() {
     window.location.href = LOGIN_PATH
-    throw { message: "login required" } as OAuthException
   }
 
   private isExpired(token: string | undefined): boolean {
@@ -133,13 +134,16 @@ class OAuth2ClientServiceImpl {
     return Date.now() / 1000 >= exp - LATENCY_EXPIRATION_BUFFER
   }
 
-  private isUnauthorized(response: Response): boolean {
+  private isUnauthorized(response: ServiceResponse<any>): boolean {
     return response.status === 401
   }
 
-  private loginOnUnauthorized(response: Response) {
+  private loginOnUnauthorized(response: ServiceResponse<any>): boolean {
     if(this.isUnauthorized(response)) {
       this.login()
+      return true
+    } else {
+      return false
     }
   }
 };
