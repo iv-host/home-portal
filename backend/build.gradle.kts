@@ -40,6 +40,10 @@ dependencies {
 
 }
 
+tasks.getByName<Jar>("jar") {
+    enabled = false
+}
+
 fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): Int {
     println("> $this")
     return project.exec {
@@ -62,8 +66,6 @@ if(project.hasProperty("withFrontend")) {
 
     tasks.named("test").configure{ dependsOn("copy-frontend") }
     tasks.named("test").configure{ dependsOn("write-version") }
-    tasks.named("jar").configure{ dependsOn("copy-frontend") }
-    tasks.named("jar").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
     tasks.named("bootJar").configure{ dependsOn("write-version") }
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
