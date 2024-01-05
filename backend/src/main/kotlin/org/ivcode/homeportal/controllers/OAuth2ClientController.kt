@@ -47,8 +47,6 @@ class OAuth2ClientController(
      */
     @GetMapping(PATH_OAUTH2_REDIRECT)
     fun authorizationCodeRedirect(
-        @RequestParam("session_state") sessionState: String,
-        @RequestParam("iss") issuer: String,
         @RequestParam("code") code: String,
         request: HttpServletRequest,
         @RequestHeader("X-Forwarded-Proto") xForwardedProto: String?,
