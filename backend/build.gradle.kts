@@ -71,6 +71,7 @@ if(project.hasProperty("withFrontend")) {
 
     tasks.register("build-frontend") {
         doLast {
+            "npm install".runCommand(frontendDirectory)
             "npm run build".runCommand(frontendDirectory)
         }
     }
