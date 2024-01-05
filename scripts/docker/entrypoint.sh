@@ -2,7 +2,7 @@
 
 LIQUIBASE_OPTS="--changelog-file db.changelog-root.yml"
 
-[ ! -z "$DATABASE_URL" ] && LIQUIBASE_OPTS+=" --url $DATABASE_URL" || { echo "'DATABASE_URL' env variable is required"; exit 1; }
+if [ ! -z "$DATABASE_URL" ]; then LIQUIBASE_OPTS+=" --url $DATABASE_URL"; else echo "'DATABASE_URL' env variable is required"; exit 1; fi;
 [ ! -z "$DATABASE_USERNAME" ] && LIQUIBASE_OPTS+=" --username $DATABASE_USERNAME"
 [ ! -z "$DATABASE_PASSWORD" ] && LIQUIBASE_OPTS+=" --password $DATABASE_PASSWORD"
 
@@ -13,6 +13,7 @@ popd || exit 1;
 
 
 PROFILE=" \
+  -Dserver.forward-headers-strategy=FRAMEWORK \
   -Dspring.servlet.multipart.max-file-size=100MB \
   -Dspring.servlet.multipart.max-request-size=100MB \
 "

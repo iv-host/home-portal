@@ -33,12 +33,10 @@ class OAuth2ClientController(
      */
     @GetMapping(PATH_OAUTH2_LOGIN)
     fun login(
-        request: HttpServletRequest,
-        @RequestHeader("X-Forwarded-Proto") xForwardedProto: String?,
-        @RequestHeader("X-Forwarded-Host") xForwardedHost: String?,
+        request: HttpServletRequest
     ): ResponseEntity<Void> = ResponseEntity
         .status(HttpStatus.MOVED_PERMANENTLY)
-        .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request, xForwardedProto, xForwardedHost)).toString())
+        .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request)).toString())
         .build()
 
     /**
@@ -48,11 +46,9 @@ class OAuth2ClientController(
     @GetMapping(PATH_OAUTH2_REDIRECT)
     fun authorizationCodeRedirect(
         @RequestParam("code") code: String,
-        request: HttpServletRequest,
-        @RequestHeader("X-Forwarded-Proto") xForwardedProto: String?,
-        @RequestHeader("X-Forwarded-Host") xForwardedHost: String?,
+        request: HttpServletRequest
     ) : ResponseEntity<Void> {
-        val hostUri =  getRequestHost(request, xForwardedProto, xForwardedHost)
+        val hostUri =  getRequestHost(request)
         val redirectUri = oAuthClientService.redirectUrl(hostUri).toString()
         val tokenResponse = oAuthClientService.token(code, redirectUri)
 
@@ -83,19 +79,8 @@ class OAuth2ClientController(
     ) = oAuthClientService.refresh(refreshToken)
 
     private fun getRequestHost(
-        request: HttpServletRequest,
-        xForwardedProto: String? = null,
-        xForwardedHost: String? = null,
-    ): URI {
-        return URIBuilder(request.requestURL.toString()).apply {
-            if(xForwardedProto!=null) {
-                scheme = xForwardedProto
-            }
-            if(xForwardedHost!=null) {
-                host = xForwardedHost
-            }
-            path = ""
-        }.build()
-    }
-
+        request: HttpServletRequest
+    ): URI = URIBuilder(request.requestURL.toString()).apply {
+        path = ""
+    }.build()
 }
