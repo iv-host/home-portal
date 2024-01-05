@@ -6,10 +6,7 @@ import org.apache.http.client.utils.URIBuilder
 import org.ivcode.homeportal.services.OAuth2ClientService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.*
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 
@@ -35,9 +32,13 @@ class OAuth2ClientController(
      * the user there to log in
      */
     @GetMapping(PATH_OAUTH2_LOGIN)
-    fun login(request: HttpServletRequest): ResponseEntity<Void> = ResponseEntity
+    fun login(
+        request: HttpServletRequest,
+        @RequestHeader("X-Forwarded-Proto") xForwardedProto: String?,
+        @RequestHeader("X-Forwarded-Host") xForwardedHost: String?,
+    ): ResponseEntity<Void> = ResponseEntity
         .status(HttpStatus.MOVED_PERMANENTLY)
-        .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request)).toString())
+        .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request, xForwardedProto, xForwardedHost)).toString())
         .build()
 
     /**
@@ -49,9 +50,11 @@ class OAuth2ClientController(
         @RequestParam("session_state") sessionState: String,
         @RequestParam("iss") issuer: String,
         @RequestParam("code") code: String,
-        request: HttpServletRequest
+        request: HttpServletRequest,
+        @RequestHeader("X-Forwarded-Proto") xForwardedProto: String?,
+        @RequestHeader("X-Forwarded-Host") xForwardedHost: String?,
     ) : ResponseEntity<Void> {
-        val hostUri =  getRequestHost(request)
+        val hostUri =  getRequestHost(request, xForwardedProto, xForwardedHost)
         val redirectUri = oAuthClientService.redirectUrl(hostUri).toString()
         val tokenResponse = oAuthClientService.token(code, redirectUri)
 
@@ -81,8 +84,20 @@ class OAuth2ClientController(
         @RequestParam("refresh_token") refreshToken: String,
     ) = oAuthClientService.refresh(refreshToken)
 
-    private fun getRequestHost(request: HttpServletRequest): URI = URIBuilder(request.requestURL.toString())
-        .setPath("")
-        .build()
+    private fun getRequestHost(
+        request: HttpServletRequest,
+        xForwardedProto: String? = null,
+        xForwardedHost: String? = null,
+    ): URI {
+        return URIBuilder(request.requestURL.toString()).apply {
+            if(xForwardedProto!=null) {
+                scheme = xForwardedProto
+            }
+            if(xForwardedHost!=null) {
+                host = xForwardedHost
+            }
+            path = ""
+        }.build()
+    }
 
 }
