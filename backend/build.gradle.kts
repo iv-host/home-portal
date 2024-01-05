@@ -60,6 +60,8 @@ if(project.hasProperty("withFrontend")) {
     val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
     val publicDirectory = File(resourcesDirectory, "main/public")
 
+    tasks.named("test").configure{ dependsOn("copy-frontend") }
+    tasks.named("test").configure{ dependsOn("write-version") }
     tasks.named("jar").configure{ dependsOn("copy-frontend") }
     tasks.named("jar").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }

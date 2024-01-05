@@ -1,21 +1,32 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 
-const FileUploadDiv = styled.div`
-  border-radius: 4px;
-  border: 1px;
-  border-style: solid;
-  padding: 8.5px 14px;
-  margin: 8px;
-  border-color: rgba(0, 0, 0, 0.3);
-  color: rgba(0, 0, 0, 0.6);
-  height: 20px;
-  width: calc(100% - 64px)
-`
+const FileUploadDiv = styled("div")(({ theme }) => ({
+  cursor: "pointer",
+  borderRadius: "4px",
+  borderWidth: "1px",
+  borderStyle: "solid",
+  padding: "8.5px 14px",
+  margin: "8px",
+  borderColor: theme.palette.divider,
+  color: theme.palette.text.disabled,
+  height: "20px",
+  width: "calc(100% - 64px)",
+
+  "&:hover": {
+    borderColor: theme.palette.text.secondary,
+  },
+
+  "&:focus": {
+    borderColor: theme.palette.primary.main,
+    borderWidth: "2px",
+    margin: "7px",
+  }
+}))
 
 export interface FileUploadProps {
   id?: string,
@@ -29,7 +40,7 @@ export const FileUpload = (props: FileUploadProps) => {
 
   return <label style={{width: "100%"}}>
     <div style={{display: "flex", alignItems: "center"}}>
-      <FileUploadDiv><Typography>{value?.replace('C:\\fakepath\\', '')}</Typography></FileUploadDiv>
+      <FileUploadDiv tabIndex={0}><Typography>{value?.replace('C:\\fakepath\\', '')}</Typography></FileUploadDiv>
       <Button startIcon={<FileUploadIcon/>} disableElevation={true} disableRipple={true} component="span" variant="contained" sx = {{
         "& .MuiButton-startIcon": {
           margin: 0

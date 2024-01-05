@@ -7,12 +7,14 @@ import { Link } from './services/LinksService';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.05),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-  },
+  backgroundColor: alpha(theme.palette.common.white, theme.palette.mode=='dark' ? 0.05 : 0.45),
   marginLeft: 0,
   width: '100%',
+
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, theme.palette.mode=='dark' ? 0.15 : 0.75),
+  },
+
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(1),
     width: 'auto',
@@ -64,11 +66,13 @@ const Listbox = styled('ul')(({ theme }) => ({
   overflow: 'auto',
   maxHeight: 200,
   border: '1px solid rgba(0,0,0,.25)',
+
   '& li.Mui-focused': {
     backgroundColor: '#4a8df6',
     color: 'white',
     cursor: 'pointer',
   },
+
   '& li:active': {
     backgroundColor: '#2977f5',
     color: 'white',

@@ -20,6 +20,7 @@ import { Link, LinkService } from '../services/LinksService';
 import { CreateLinkDialog } from './CreateLinkDialog';
 import { DeleteDialog } from './DeleteDialog';
 import { request } from '../services/ServiceResponse';
+import { nop } from '../utils/FunctionUtils';
 
 interface Row {
   id: number,
@@ -227,11 +228,11 @@ export const LinkTab = (props: LinkTabProps) => {
   const [createLinkDialog_open, setCreateLinkDialog_open] = React.useState(false);
 
   const load = () => request(LinkService.getLinks(), 
-    (links) => {    
+    links => {    
       setLinks(links!)
       setRows(createRowArray(links!))
     },
-    (msg) => {if(props.onError) {props.onError(msg)}})
+    msg => props.onError ? props.onError(msg) : nop())
 
   React.useEffect(() => {
     load()
@@ -257,14 +258,18 @@ export const LinkTab = (props: LinkTabProps) => {
       throw "delete row not defined"
     }
 
-    await LinkService.deleteLink(deleteDialog_row?.name)
+    await request(LinkService.deleteLink(deleteDialog_row?.name),
+      undefined,
+      msg => props.onError ? props.onError(msg) : nop())
 
     await load()
-    if(props.onLinksUpdated) props.onLinksUpdated()
+    props.onLinksUpdated ? props.onLinksUpdated() : nop()
   }
 
   const handleCreateLink = async (name: string, form: FormData) => {
-    await LinkService.createLink(name, form)
+    await request(LinkService.createLink(name, form),
+      undefined,
+      msg => props.onError ? props.onError(msg) : nop())
     await load()
     if(props.onLinksUpdated) props.onLinksUpdated()
   }

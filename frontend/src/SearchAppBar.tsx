@@ -11,17 +11,17 @@ import { SearchBar } from './SearchBar';
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
-    primary: {
-      main: '#1976d2',
-    },
-  },
+    mode: 'dark'
+  }
 });
 
 const lightTheme = createTheme({
   palette: {
-    mode: 'light'
-  },
+    mode: 'light',
+    secondary: {
+      main: '#EBEBEB'
+    }
+  }
 });
 
 
@@ -41,7 +41,7 @@ export default function SearchAppBar(props: SearchAppBarProps) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <AppBar position="static">
+        <AppBar color='secondary' position="static">
           <Toolbar variant="dense">
             {props.enableSettings && <SettingsButton {...props} />}
             <Typography

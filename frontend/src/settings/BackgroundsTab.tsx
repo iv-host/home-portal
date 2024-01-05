@@ -24,9 +24,10 @@ const ImageCard = styled("div")(({ theme }) => ({
   cursor: "pointer",
   
   "&.selected": {
-    margin: "6px",
+    margin: "5px",
     border: "solid",
-    borderWidth: "2px",
+    borderWidth: "3px",
+    borderColor: theme.palette.primary.light,
     borderRadius: theme.shape.borderRadius,
   }
 }));

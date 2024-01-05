@@ -117,13 +117,13 @@ databaseChangeLog:
                   value: /bg
               - column:
                   name: filename
-                  value: freenaturestock-2111.jpg
+                  value: macro-photo-of-pretty-purple-flowers.jpg
               - column:
                   name: mime
                   value: image/jpeg
               - column:
                   name: data
-                  valueBlobFile: images/freenaturestock-2111.jpg
+                  valueBlobFile: images/macro-photo-of-pretty-purple-flowers.jpg
         - insert:
             tableName: image
             columns:
@@ -132,13 +132,13 @@ databaseChangeLog:
                   value: /bg
               - column:
                   name: filename
-                  value: freenaturestock-2138.jpg
+                  value: macro-snowflake.jpg
               - column:
                   name: mime
                   value: image/jpeg
               - column:
                   name: data
-                  valueBlobFile: images/freenaturestock-2138.jpg
+                  valueBlobFile: images/macro-snowflake.jpg
         - insert:
             tableName: image
             columns:
@@ -192,11 +192,11 @@ databaseChangeLog:
       changes:
         - sql:
             dbms:  'mysql'
-            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='freenaturestock-2111.jpg'
+            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg'
       rollback:
         - sql:
             dbms:  'mysql'
-            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='freenaturestock-2111.jpg')
+            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg')
 
   # Demo Background Image #2
   - changeSet:
@@ -205,11 +205,11 @@ databaseChangeLog:
       changes:
         - sql:
             dbms:  'mysql'
-            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='freenaturestock-2138.jpg'
+            sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-snowflake.jpg'
       rollback:
         - sql:
             dbms:  'mysql'
-            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='freenaturestock-2138.jpg')
+            sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-snowflake.jpg')
 
   # Demo Link Google
   - changeSet:
