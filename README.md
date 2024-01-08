@@ -1,9 +1,5 @@
 # home-portal
-A portal to all of your seld-hosted applications. Simply put, it's an application of links.
-
-Non-admin users login and see 
-
-Admin users see the available links, but also have to ability to create and delete links. They can also set or delete background images.
+A portal to all of your self-hosted applications. Simply put, it's an application of links.
 
 ## demo
 <sup>Required: `npm` `docker-compose`</sup>
