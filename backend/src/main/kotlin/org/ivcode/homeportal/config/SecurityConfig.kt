@@ -17,15 +17,15 @@ import org.springframework.security.oauth2.jwt.JwtDecoders
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
-const val ADMIN_AUTHORITY = "ADMIN"
+public const val ADMIN_AUTHORITY: String = "ADMIN"
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig {
+public class SecurityConfig {
 
     @Bean
     @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "false", matchIfMissing = true)
-    fun disabledSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    public fun disabledSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             authorizeHttpRequests {
                 authorize(anyRequest, permitAll)
@@ -39,7 +39,7 @@ class SecurityConfig {
 
     @Bean
     @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
-    fun securityFilterChain(
+    public fun securityFilterChain(
         http: HttpSecurity,
         jwtDecoder: JwtDecoder,
         @Value("\${security.oauth2.admin}") adminQuery: String,
@@ -81,7 +81,7 @@ class SecurityConfig {
 
     @Bean
     @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
-    fun createJwtDecoder(
+    public fun createJwtDecoder(
         @Value("\${security.oauth2.issuer-url}") issuer: String,
     ): JwtDecoder {
         return JwtDecoders.fromIssuerLocation(issuer)

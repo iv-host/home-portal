@@ -13,19 +13,19 @@ import org.springframework.web.multipart.MultipartFile
 @Tag(name="link-controller", description = "operations related to creating and deleting links")
 @RestController
 @RequestMapping("/api/links")
-class LinkController(
+public class LinkController(
     private val linkService: LinkService
 ) {
 
     @Operation(description = "Lists all links available to the current user")
     @GetMapping
-    fun getUserLinks(): List<Link> {
+    public fun getUserLinks(): List<Link> {
         return linkService.getAllLinks()
     }
 
     @Operation(description = "Creates a new link")
     @PostMapping (path= ["/{name}"], consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun postApp(
+    public fun postApp(
         @PathVariable("name") name: String,
         @RequestParam("href") href: String,
         @RequestParam("icon") multipartFile: MultipartFile? = null,
@@ -34,8 +34,8 @@ class LinkController(
             name = name,
             href = href,
             icon = if(multipartFile==null) null else CreateImageRequest (
-                filename = multipartFile.originalFilename,
-                mime = multipartFile.contentType,
+                filename = multipartFile.originalFilename!!,
+                mime = multipartFile.contentType!!,
                 data = multipartFile.inputStream
             )
         )
@@ -45,7 +45,7 @@ class LinkController(
 
     @Operation(description = "Deletes a link")
     @DeleteMapping(path = ["/{name}"])
-    fun deleteApp(
+    public fun deleteApp(
         @PathVariable name: String
     ) {
         linkService.deleteLink(name)

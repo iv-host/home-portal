@@ -10,15 +10,13 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 @Service
-class HealthService(
+public class HealthService(
     private val healthDao: HealthDao,
     @Value("\${security.oauth2.enabled:false}") private val isOAuthEnabled: Boolean,
     @Value("\${security.oauth2.issuer-url:#{null}}") private val oauthIssuerUrl: String?,
 ) {
 
-    fun healthCheck(): HealthInfo {
-
-        var success = true
+    public fun healthCheck(): HealthInfo {
 
         // Check for database connectivity
         val databaseTest = testDatabase()
@@ -87,11 +85,11 @@ class HealthService(
     }
 
     private fun testUrl(url: String): Int {
-        val client = HttpClient.newBuilder().build();
+        val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(URI.create(url))
-            .build();
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            .build()
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         return response.statusCode()
     }
 }

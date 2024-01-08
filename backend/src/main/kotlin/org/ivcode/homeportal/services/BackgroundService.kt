@@ -13,19 +13,19 @@ import org.springframework.transaction.annotation.Transactional
 private const val IMAGE_PATH = "/bg"
 
 @Service
-class BackgroundService(
+public class BackgroundService(
     private val backgroundDao: BackgroundDao,
     private val imageService: ImageService
 ) {
 
     @Transactional
-    fun getBackgroundImages() = backgroundDao.selectBackgroundImages().map { bg -> bg.toBackgroundImage() }
+    public fun getBackgroundImages(): List<BackgroundImage> = backgroundDao.selectBackgroundImages().map { bg -> bg.toBackgroundImage() }
 
     @Transactional
-    fun getRandomBackgroundImage(): BackgroundImage = getBackgroundImages().randomOrNull() ?: throw NotFoundException()
+    public fun getRandomBackgroundImage(): BackgroundImage = getBackgroundImages().randomOrNull() ?: throw NotFoundException()
 
     @Transactional
-    fun createBackgroundImage(request: CreateImageRequest): BackgroundImage {
+    public fun createBackgroundImage(request: CreateImageRequest): BackgroundImage {
         val imageId = imageService.postImage(
             mime = request.mime,
             path = IMAGE_PATH,
@@ -44,7 +44,7 @@ class BackgroundService(
     }
 
     @Transactional
-    fun deleteBackgroundImage(filename: String) {
+    public fun deleteBackgroundImage(filename: String) {
         val count = backgroundDao.deleteBackgroundImage(filename)
         if(count==0) {
             throw NotFoundException()

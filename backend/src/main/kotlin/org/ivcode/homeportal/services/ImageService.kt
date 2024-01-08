@@ -14,16 +14,16 @@ import java.io.InputStream
 import java.io.OutputStream
 
 @Service
-class ImageService (
+public class ImageService (
     private val imageDao: ImageDao
 ) {
 
     @Transactional
-    fun getMetaData(path: String, filename: String): ImageMetaData =
+    public fun getMetaData(path: String, filename: String): ImageMetaData =
         imageDao.getMetaData(path, filename)?.toImageMetaData() ?: throw NotFoundException()
 
     @Transactional
-    fun getImageData(path: String, filename: String, out: OutputStream) {
+    public fun getImageData(path: String, filename: String, out: OutputStream) {
         val data = imageDao.getData(path, filename) ?: throw NotFoundException()
         data.use {
             it.transferTo(out)
@@ -31,7 +31,7 @@ class ImageService (
     }
 
     @Transactional
-    fun postImage(path: String, filename: String, mime: String, input: InputStream): Long {
+    public fun postImage(path: String, filename: String, mime: String, input: InputStream): Long {
         val value = ImageMetaEntity(
             path = path,
             filename = filename,
@@ -48,7 +48,7 @@ class ImageService (
     }
 
     @Transactional
-    fun deleteImage(path: String, filename: String) {
+    public fun deleteImage(path: String, filename: String) {
         val count = imageDao.deleteImage(path, filename)
         if(count==0) {
             throw NotFoundException()
@@ -56,10 +56,10 @@ class ImageService (
     }
 
     @Transactional
-    fun deleteImages(imageIds: List<Long>): Int =
+    public fun deleteImages(imageIds: List<Long>): Int =
         imageDao.deleteImagesById(imageIds)
 
-    fun parseImagePath(urlPath: String): ImagePath {
+    public fun parseImagePath(urlPath: String): ImagePath {
         val index = urlPath.lastIndexOf('/')
         return if(index==-1) {
             ImagePath(

@@ -8,10 +8,10 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 
 @Service
-class UserService(
+public class UserService(
     @Value("\${security.oauth2.enabled:false}") private val isOAuth2Enabled: Boolean
 ) {
-    fun getUserInfo(): UserInfo = UserInfo(
+    public fun getUserInfo(): UserInfo = UserInfo(
         features = Features(
             settings = isAdmin()
         )

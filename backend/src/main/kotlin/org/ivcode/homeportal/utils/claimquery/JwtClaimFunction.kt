@@ -29,15 +29,17 @@ internal class ScopeClaimFunction: JwtClaimFunction {
         if(params.isEmpty()) {
             return false
         }
+
         params.forEach {
+            // check cast
             if(it !is String) {
                 throw ClassCastException("The scope function parameters must be of type String: function_signature = scope(String... scopes)")
             }
         }
+        @Suppress("UNCHECKED_CAST") val scopes: List<String> = params as List<String>
 
-        val scopes: List<String> = params as List<String>
-
-        val jwt: Map<String, Any> = context["jwt"] as Map<String, Any>? ?: return false
+        // The type for the jwt is known
+        @Suppress("UNCHECKED_CAST") val jwt: Map<String, Any> = context["jwt"] as Map<String, Any>? ?: return false
         val scopesString = jwt["scope"] as String? ?: return false
 
         val scopesList = scopesString.split(" ")
@@ -59,14 +61,15 @@ internal class EmailClaimFunction: JwtClaimFunction {
             return false
         }
         params.forEach {
+            // check casting
             if(it !is String) {
                 throw ClassCastException("The email function parameters must be of type String: function_signature = email(String... scopes)")
             }
         }
+        @Suppress("UNCHECKED_CAST") val emailParams: List<String> = params as List<String>
 
-        val emailParams: List<String> = params as List<String>
-
-        val jwt: Map<String, Any> = context["jwt"] as Map<String, Any>? ?: return false
+        // The type for the jwt is known
+        @Suppress("UNCHECKED_CAST") val jwt: Map<String, Any> = context["jwt"] as Map<String, Any>? ?: return false
         val jwtEmail: String = jwt["email"] as String? ?: return false
 
         val matches = emailParams.filter { email -> email.equals(jwtEmail, ignoreCase = true) }
@@ -83,10 +86,10 @@ internal class EmailClaimFunction: JwtClaimFunction {
  */
 internal class ContainsClaimFunction: JwtClaimFunction {
     override fun execute(context: Map<String, Any>, params: List<Any>): Any {
-        val list = params[0] as List<String>? ?: return false
+        val list = params[0] as List<*>
         val value: String = params[1] as String
 
-        val matches = list.filter { v -> v.equals(value, ignoreCase = true) }
+        val matches = list.filter { v -> (v as String).equals(value, ignoreCase = true) }
         return matches.isNotEmpty()
     }
 }

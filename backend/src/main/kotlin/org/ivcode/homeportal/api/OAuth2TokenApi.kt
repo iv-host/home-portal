@@ -5,12 +5,11 @@ import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
-import retrofit2.http.Url
 
-interface OAuth2TokenApi {
+public interface OAuth2TokenApi {
     @POST(".")
     @FormUrlEncoded
-    fun token (
+    public fun token (
         @Field("grant_type") grantType: String = "authorization_code",
         @Field("code") code: String,
         @Field("redirect_uri") redirectUri: String? = null,
@@ -20,7 +19,7 @@ interface OAuth2TokenApi {
 
     @POST(".")
     @FormUrlEncoded
-    fun refresh (
+    public fun refresh (
         @Field("grant_type") grantType: String = "refresh_token",
         @Field("refresh_token") refreshToken: String,
         @Field("scope") scope: String? = null,

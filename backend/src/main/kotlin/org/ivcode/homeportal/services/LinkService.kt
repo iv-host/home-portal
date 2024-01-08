@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class LinkService (
+public class LinkService (
     private val linkDao: LinkDao,
     private val imageService: ImageService,
 ) {
 
     @Transactional
-    fun getAllLinks(): List<Link> {
+    public fun getAllLinks(): List<Link> {
         return linkDao.getLinkIcons().map { l -> l.toLink() }.sortedBy { it.name }
     }
 
     @Transactional
-    fun createLink(request: CreateLinkRequest): Link {
+    public fun createLink(request: CreateLinkRequest): Link {
         val path = "/link/${request.name}"
         val iconPath = if (request.icon!=null) toImagePath(
             path,
@@ -51,7 +51,7 @@ class LinkService (
     }
 
     @Transactional
-    fun deleteLink(name: String) {
+    public fun deleteLink(name: String) {
         val linkIcon = linkDao.getLinkIcon(name) ?: throw NotFoundException()
 
         val count = linkDao.deleteLink(name)

@@ -26,10 +26,12 @@ internal class StringWalker(
         return get()
     }
 
+    @Suppress("unused")
     fun peekAhead(lookahead: Int = 1): Char? {
         return get(index+lookahead)
     }
 
+    @Suppress("unused")
     fun seekNextWithoutWhitespace(): Char? {
         var i = 1
         var ch = get(index+i)
@@ -47,6 +49,7 @@ internal class StringWalker(
         return get()
     }
 
+    @Suppress("unused")
     fun peekBehind(lookbehind: Int = 1): Char? {
         return get(index-lookbehind)
     }

@@ -4,19 +4,19 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-class NotFoundException: RuntimeException()
+public class NotFoundException: RuntimeException()
 
 @ResponseStatus(HttpStatus.CONFLICT)
-class ConflictException: RuntimeException()
+public class ConflictException: RuntimeException()
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-class BadRequestException: RuntimeException()
+public class BadRequestException: RuntimeException()
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-class InternalServerErrorException: RuntimeException()
+public class InternalServerErrorException: RuntimeException()
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
-class UnauthorizedException: RuntimeException()
+public class UnauthorizedException: RuntimeException()
 
 @ResponseStatus(HttpStatus.FORBIDDEN)
-class ForbiddenException: RuntimeException()
+public class ForbiddenException: RuntimeException()

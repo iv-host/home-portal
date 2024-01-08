@@ -1,9 +1,9 @@
 package org.ivcode.homeportal.services.models
 
-data class UserInfo(
+public data class UserInfo(
     val features: Features
 )
 
-data class Features (
+public data class Features (
     val settings: Boolean
 )

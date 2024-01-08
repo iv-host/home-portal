@@ -14,15 +14,15 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 
 @Configuration
 @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
-class OAuth2ClientConfig {
+public class OAuth2ClientConfig {
 
     @Bean("oauth2.redirect-path")
-    fun createRedirectPath(): String {
+    public fun createRedirectPath(): String {
         return "${PATH_OAUTH2}${PATH_OAUTH2_REDIRECT}"
     }
 
     @Bean
-    fun createOAuth2TokenApi (objectMapper: ObjectMapper, @Value("\${security.oauth2.client.token-url}") tokenUrl: String,): OAuth2TokenApi {
+    public fun createOAuth2TokenApi (objectMapper: ObjectMapper, @Value("\${security.oauth2.client.token-url}") tokenUrl: String): OAuth2TokenApi {
         val url = if(tokenUrl.endsWith('/')) {
             tokenUrl
         } else {

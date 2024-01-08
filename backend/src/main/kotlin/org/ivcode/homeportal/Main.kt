@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @SpringBootApplication(exclude = [UserDetailsServiceAutoConfiguration::class])
 @EnableTransactionManagement
-class Main
+public class Main
 
-fun main(args: Array<String>) {
+public fun main(args: Array<String>) {
     SpringApplication.run(Main::class.java, *args)
 }

@@ -1,6 +1,6 @@
 package org.ivcode.homeportal.repositories.entities
 
-data class BackgroundImageEntity(
+public data class BackgroundImageEntity(
     val id: Int? = null,
     val image: ImageMetaEntity? = null
 )

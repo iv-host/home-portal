@@ -90,7 +90,7 @@ internal class JwtClaimTokenParser {
     }
 }
 
-enum class TokenType {
+public enum class TokenType {
     IDENTIFIER,
     OPEN_PARENTHESIS,
     CLOSE_PARENTHESIS,
@@ -99,7 +99,7 @@ enum class TokenType {
     STRING_LITERAL,
     BOOLEAN_LITERAL
 }
-data class Token (
+public data class Token (
     val value: Any,
     val index: Int,
     val type: TokenType

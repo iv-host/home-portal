@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.8.20"
-    kotlin("plugin.spring") version "1.8.20"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.spring") version "1.9.22"
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.0"
     application
@@ -33,7 +33,7 @@ dependencies {
     implementation("org.mybatis:mybatis:3.5.14")
     implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
 
-    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("com.mysql:mysql-connector-j:8.2.0")
 
     testImplementation(kotlin("test"))
     testImplementation("org.mockito:mockito-core:5.8.0")
@@ -64,12 +64,19 @@ if(project.hasProperty("withFrontend")) {
     val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
     val publicDirectory = File(resourcesDirectory, "main/public")
 
+    tasks.named("clean").configure{ dependsOn("clean-frontend") }
     tasks.named("test").configure{ dependsOn("copy-frontend") }
     tasks.named("test").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
     tasks.named("bootJar").configure{ dependsOn("write-version") }
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
     tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
+
+    tasks.register("clean-frontend") {
+        doLast {
+            "npm run clean".runCommand(frontendDirectory)
+        }
+    }
 
     tasks.register("build-frontend") {
         doLast {
@@ -97,6 +104,7 @@ tasks.test {
 }
 
 kotlin {
+    explicitApi()
     jvmToolchain(17)
 }
 

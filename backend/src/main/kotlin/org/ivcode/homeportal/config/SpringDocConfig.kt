@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class SpringDocConfig(
+public class SpringDocConfig(
     @Qualifier("version") private val version: String,
     @Value("\${security.oauth2.enabled:false}") private val isOAuthEnabled: Boolean,
     @Value("\${security.oauth2.client.authorization-url:#{null}}") private val authorizationUrl: String?,
@@ -19,7 +19,7 @@ class SpringDocConfig(
 
 
     @Bean
-    fun createOpenAPI(): OpenAPI {
+    public fun createOpenAPI(): OpenAPI {
         return OpenAPI().apply {
             info(Info().title("home-portal").version(version))
 
@@ -45,8 +45,6 @@ class SpringDocConfig(
             }
         }
     }
-
-
 
 }
 

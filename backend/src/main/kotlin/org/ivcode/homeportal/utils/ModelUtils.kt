@@ -9,29 +9,29 @@ import org.ivcode.homeportal.repositories.entities.LinkIconEntity
 import org.ivcode.homeportal.services.models.BackgroundImage
 import java.net.URLEncoder.encode
 
-fun LinkIconEntity.toLink() = Link (
+public fun LinkIconEntity.toLink(): Link = Link (
     name = this.link?.name ?: throw IllegalStateException(),
     href = this.link.href ?: throw IllegalStateException(),
     icon = this.image?.toImagePath()
 )
 
-fun ImageMetaEntity.toImageMetaData() = ImageMetaData (
+public fun ImageMetaEntity.toImageMetaData(): ImageMetaData = ImageMetaData (
     mime = this.mime!!,
     path = this.path!!,
     filename = this.filename!!
 )
 
-fun BackgroundImageEntity.toBackgroundImage() = BackgroundImage(
+public fun BackgroundImageEntity.toBackgroundImage(): BackgroundImage = BackgroundImage(
     filename = this.image?.filename!!,
     url = this.image.toImagePath()
 )
 
-fun ImageMetaEntity.toImagePath(): String
+public fun ImageMetaEntity.toImagePath(): String
     = toImagePath(this.path, this.filename!!)
 
-fun String.encodeUrl(): String = encode(this, Charsets.UTF_8)
+public fun String.encodeUrl(): String = encode(this, Charsets.UTF_8)
 
-fun toImagePath(path: String?, filename: String): String {
+public fun toImagePath(path: String?, filename: String): String {
     val finalPath = if(path.isNullOrBlank()) {
         "/"
     } else {

@@ -9,25 +9,23 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.HandlerMapping
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
 import java.net.URLDecoder.decode
 
-const val IMAGE_CONTROLLER_PATH = "/img"
+public const val IMAGE_CONTROLLER_PATH: String = "/img"
 
 @RestController
 @RequestMapping(IMAGE_CONTROLLER_PATH)
-class ImageController (
+public class ImageController (
     private val imageService: ImageService
 ) {
 
 
     @Hidden
     @RequestMapping(method = [RequestMethod.GET], path = ["/**"])
-    fun getImage(
+    public fun getImage(
         request: HttpServletRequest
     ): ResponseEntity<StreamingResponseBody> {
         val imagePath = getImagePath(request)

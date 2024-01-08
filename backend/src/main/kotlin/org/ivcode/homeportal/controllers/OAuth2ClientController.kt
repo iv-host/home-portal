@@ -3,6 +3,7 @@ package org.ivcode.homeportal.controllers
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletRequest
 import org.apache.http.client.utils.URIBuilder
+import org.ivcode.homeportal.api.models.OAuth2TokenResponse
 import org.ivcode.homeportal.services.OAuth2ClientService
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.*
@@ -10,10 +11,10 @@ import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 
-const val PATH_OAUTH2 = "/oauth2"
-const val PATH_OAUTH2_LOGIN = "/login"
-const val PATH_OAUTH2_REDIRECT = "/redirect"
-const val PATH_OAUTH2_REFRESH = "/refresh"
+public const val PATH_OAUTH2: String = "/oauth2"
+public const val PATH_OAUTH2_LOGIN: String = "/login"
+public const val PATH_OAUTH2_REDIRECT: String = "/redirect"
+public const val PATH_OAUTH2_REFRESH: String = "/refresh"
 
 /**
  * Facilitates a user logging in through an OAuth2 authorization server.
@@ -23,7 +24,7 @@ const val PATH_OAUTH2_REFRESH = "/refresh"
 @RestController
 @RequestMapping(PATH_OAUTH2)
 @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
-class OAuth2ClientController(
+public class OAuth2ClientController(
     private val oAuthClientService: OAuth2ClientService
 ) {
 
@@ -32,7 +33,7 @@ class OAuth2ClientController(
      * the user there to log in
      */
     @GetMapping(PATH_OAUTH2_LOGIN)
-    fun login(
+    public fun login(
         request: HttpServletRequest
     ): ResponseEntity<Void> = ResponseEntity
         .status(HttpStatus.MOVED_PERMANENTLY)
@@ -44,7 +45,7 @@ class OAuth2ClientController(
      * set as cookies and the user is redirected back into the application.
      */
     @GetMapping(PATH_OAUTH2_REDIRECT)
-    fun authorizationCodeRedirect(
+    public fun authorizationCodeRedirect(
         @RequestParam("code") code: String,
         request: HttpServletRequest
     ) : ResponseEntity<Void> {
@@ -53,12 +54,12 @@ class OAuth2ClientController(
         val tokenResponse = oAuthClientService.token(code, redirectUri)
 
         val accessTokenCookie: HttpCookie = ResponseCookie
-            .from("access-token", tokenResponse.accessToken)
+            .from("access-token", tokenResponse.accessToken!!)
             .path("/")
             .build()
 
         val refreshTokenCookie: HttpCookie = ResponseCookie
-            .from("refresh-token", tokenResponse.refreshToken)
+            .from("refresh-token", tokenResponse.refreshToken!!)
             .path("/")
             .build()
 
@@ -74,9 +75,9 @@ class OAuth2ClientController(
      * Requested by the UI to refresh tokens
      */
     @GetMapping(PATH_OAUTH2_REFRESH)
-    fun refresh (
+    public fun refresh (
         @RequestParam("refresh_token") refreshToken: String,
-    ) = oAuthClientService.refresh(refreshToken)
+    ): OAuth2TokenResponse = oAuthClientService.refresh(refreshToken)
 
     private fun getRequestHost(
         request: HttpServletRequest

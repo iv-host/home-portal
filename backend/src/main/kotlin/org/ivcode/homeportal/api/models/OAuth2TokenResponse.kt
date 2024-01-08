@@ -2,7 +2,7 @@ package org.ivcode.homeportal.api.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class OAuth2TokenResponse (
+public data class OAuth2TokenResponse (
     @JsonProperty("access_token")
     val accessToken: String?,
 

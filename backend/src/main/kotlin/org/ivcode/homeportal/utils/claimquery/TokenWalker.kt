@@ -5,6 +5,7 @@ internal class TokenWalker(
 ) {
     private var index: Int = -1
 
+    @Suppress("unused")
     fun getIndex() = index
 
     fun get(index: Int = this.index): Token? {
@@ -24,11 +25,13 @@ internal class TokenWalker(
         return get(index+lookahead)
     }
 
+    @Suppress("unused")
     fun back(): Token? {
         if(index>0) index--
         return get()
     }
 
+    @Suppress("unused")
     fun peekBehind(lookbehind: Int = 1): Token? {
         return get(index-lookbehind)
     }

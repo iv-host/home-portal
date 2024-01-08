@@ -1,6 +1,6 @@
 package org.ivcode.homeportal.repositories.entities
 
-data class LinkEntity (
+public data class LinkEntity (
     val id: Long? = null,
     val imageId: Long? = null,
     val name: String? = null,

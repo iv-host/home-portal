@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/info")
-class InfoController(
+public class InfoController(
     @Qualifier("version") private val version: String,
 ) {
     @GetMapping("/version")
-    fun getVersion() = version
+    public fun getVersion(): String = version
 }

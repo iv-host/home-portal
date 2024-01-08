@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/health-check")
-class HealthController(
+public class HealthController(
     private val healthService: HealthService
 ) {
 
@@ -21,7 +21,7 @@ class HealthController(
         ApiResponse(responseCode = "200", description = "Healthy"),
         ApiResponse(responseCode = "500", description = "Unhealthy")
     ])
-    fun healthCheck(): ResponseEntity<HealthInfo> {
+    public fun healthCheck(): ResponseEntity<HealthInfo> {
         val info = healthService.healthCheck()
         return if(info.success) {
             ResponseEntity.ok().body(info)

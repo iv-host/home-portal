@@ -4,7 +4,7 @@ import org.apache.ibatis.annotations.*
 import org.ivcode.homeportal.repositories.entities.BackgroundEntity
 import org.ivcode.homeportal.repositories.entities.BackgroundImageEntity
 
-const val SELECT_BACKGROUND_IMAGES = """
+private const val SELECT_BACKGROUND_IMAGES = """
     SELECT
         background.id AS background_id,
         image.id AS image_id,
@@ -15,19 +15,19 @@ const val SELECT_BACKGROUND_IMAGES = """
         background INNER JOIN image ON background.image_id=image.id
 """
 
-const val INSERT_BACKGROUND = """
+private const val INSERT_BACKGROUND = """
     INSERT INTO background (image_id)
     VALUES (#{imageId})
 """
 
-const val DELETE_BACKGROUND_IMAGE = """
+private const val DELETE_BACKGROUND_IMAGE = """
     DELETE background, image
     FROM background INNER JOIN image ON background.image_id=image.id
     WHERE image.filename = #{filename}
 """
 
 @Mapper
-interface BackgroundDao {
+public interface BackgroundDao {
 
     @Select(SELECT_BACKGROUND_IMAGES)
     @Result(property = "id", column = "background_id")
@@ -35,12 +35,12 @@ interface BackgroundDao {
     @Result(property = "image.mime", column = "image_mime")
     @Result(property = "image.path", column = "image_path")
     @Result(property = "image.filename", column = "image_filename")
-    fun selectBackgroundImages(): List<BackgroundImageEntity>
+    public fun selectBackgroundImages(): List<BackgroundImageEntity>
 
     @Insert(INSERT_BACKGROUND)
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    fun createBackgroundImage(background: BackgroundEntity): Int
+    public fun createBackgroundImage(background: BackgroundEntity): Int
 
     @Delete(DELETE_BACKGROUND_IMAGE)
-    fun deleteBackgroundImage(filename: String): Int
+    public fun deleteBackgroundImage(filename: String): Int
 }

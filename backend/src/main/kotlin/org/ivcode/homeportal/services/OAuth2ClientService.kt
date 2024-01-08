@@ -15,7 +15,7 @@ import java.net.URI
 
 @Service
 @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
-class OAuth2ClientService(
+public class OAuth2ClientService(
     private val oAuth2TokenApi: OAuth2TokenApi,
     @Qualifier("oauth2.redirect-path") private val redirectPath: String,
     @Value("\${security.oauth2.client.authorization-url}") private val authorizationUrl: String,
@@ -23,7 +23,7 @@ class OAuth2ClientService(
     @Value("\${security.oauth2.client.client-secret}") private val clientSecret: String,
 ) {
 
-    fun authUrl (requestedHost: URI):URI {
+    public fun authUrl (requestedHost: URI):URI {
         val uri = URIBuilder(authorizationUrl)
             .addParameter("response_type", "code")
             .addParameter("client_id", clientId)
@@ -33,12 +33,12 @@ class OAuth2ClientService(
         return uri
     }
 
-    fun redirectUrl (requestedHost: URI):URI = URIBuilder(requestedHost.toString())
+    public fun redirectUrl (requestedHost: URI):URI = URIBuilder(requestedHost.toString())
         .setPath(redirectPath)
         .build()
 
 
-    fun token (code: String, redirectUri: String): OAuth2TokenResponse {
+    public fun token (code: String, redirectUri: String): OAuth2TokenResponse {
         val tokenResponse = oAuth2TokenApi.token (
             code = code,
             redirectUri = redirectUri,
@@ -63,7 +63,7 @@ class OAuth2ClientService(
         return response.body()!!
     }
 
-    fun refresh (refreshToken: String): OAuth2TokenResponse {
+    public fun refresh (refreshToken: String): OAuth2TokenResponse {
         val tokenResponse = oAuth2TokenApi.refresh (
             refreshToken = refreshToken,
             clientId = clientId,

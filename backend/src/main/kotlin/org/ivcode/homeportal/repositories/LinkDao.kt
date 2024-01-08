@@ -67,7 +67,7 @@ private const val SELECT_LINK_ICON = """
 """
 
 @Mapper
-interface LinkDao {
+public interface LinkDao {
 
     @Select(SELECT_LINK_ICONS)
     @Result(property = "link.id", column = "link_id")
@@ -77,7 +77,7 @@ interface LinkDao {
     @Result(property = "image.mime", column = "image_mime")
     @Result(property = "image.path", column = "image_path")
     @Result(property = "image.filename", column = "image_filename")
-    fun getLinkIcons(): List<LinkIconEntity>
+    public fun getLinkIcons(): List<LinkIconEntity>
 
     @Select(SELECT_LINK_ICONS_BY_NAME)
     @Result(property = "link.id", column = "link_id")
@@ -87,7 +87,7 @@ interface LinkDao {
     @Result(property = "image.mime", column = "image_mime")
     @Result(property = "image.path", column = "image_path")
     @Result(property = "image.filename", column = "image_filename")
-    fun getLinkIconsByName(names: List<String>): List<LinkIconEntity>
+    public fun getLinkIconsByName(names: List<String>): List<LinkIconEntity>
 
     @Select(SELECT_LINK_ICON)
     @Result(property = "link.id", column = "link_id")
@@ -97,15 +97,15 @@ interface LinkDao {
     @Result(property = "image.mime", column = "image_mime")
     @Result(property = "image.path", column = "image_path")
     @Result(property = "image.filename", column = "image_filename")
-    fun getLinkIcon(name: String): LinkIconEntity?
+    public fun getLinkIcon(name: String): LinkIconEntity?
 
     @Insert(INSERT_LINK)
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    fun createLink(link: LinkEntity): Int
+    public fun createLink(link: LinkEntity): Int
 
     @Delete(DELETE_LINK)
-    fun deleteLink(name: String): Int
+    public fun deleteLink(name: String): Int
 
     @Delete(DELETE_LINKS_BY_ID)
-    fun deleteLinksById(linkIds: List<Long>): Int
+    public fun deleteLinksById(linkIds: List<Long>): Int
 }
