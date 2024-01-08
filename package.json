@@ -3,15 +3,14 @@
   "version": "0.1-SNAPSHOT",
   "description": "",
   "scripts": {
-    "demo": "npm run build-image && npm run demo:up",
-    "demo:up": "cd scripts/demo && docker-compose up -d",
-    "demo:down": "cd scripts/demo && docker-compose down",
-    "build": "scripts/build/build.sh;",
-    "build-in-docker": "npm run build-in-docker:image && scripts/build-in-docker/build.sh;",
-    "build-in-docker:image": "scripts/build-in-docker/build-image.sh",
-    "build-image": "npm run build-in-docker && scripts/docker/build-image.sh",
+    "demo:up": "scripts/demo/demo-up.sh;",
+    "demo:down": "scripts/demo/demo-down.sh;",
     "dev:up": "cd scripts/dev; docker-compose up -d",
-    "dev:down": "cd scripts/dev; docker-compose down"
+    "dev:down": "cd scripts/dev; docker-compose down",
+    "build": "npm run build-in-docker:image && npm run build-in-docker:run && npm run build:image",
+    "build-in-docker:image": "scripts/build-in-docker/build-image.sh",
+    "build-in-docker:run": "scripts/build-in-docker/build.sh;",
+    "build:image": "scripts/docker/build-image.sh"
   },
   "author": "isaiah.v"
 }

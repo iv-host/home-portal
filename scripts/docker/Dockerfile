@@ -16,10 +16,15 @@ RUN cd internal/lib \
 ## Main Image
 FROM openjdk:17-jdk-slim
 
+RUN apt-get update && apt-get install -y curl
+
 COPY backend/build/libs/home-portal-*.jar home-portal.jar
 COPY scripts/docker/entrypoint.sh entrypoint.sh
 
 COPY --from=0 /liquibase /liquibase
 COPY ./database /database
+
+HEALTHCHECK --timeout=5s --start-period=30s \
+  CMD curl -f http://localhost:8080/health-check || exit 1
 
 CMD ["./entrypoint.sh"]
