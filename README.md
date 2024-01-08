@@ -1,10 +1,10 @@
 # home-portal
-A portal to all of your self-hosted applications. Simply put, it's an application of links.
+A portal to your self-hosted applications. Simply put, it's an application of links.
 
 ## demo
-<sup>Required: `npm` `docker-compose`</sup>
+<sup>Required: `linux` `npm` `docker-compose`</sup>
 
-A "demo" script has been setup to demo the product with the simplest possible configuration,.
+Demo the product by building and running the application on your local machine. The demo script is setup to demonstrate the application's features. Security isn't enabled and all users have admin rights.
 
 Build & Start:
 ```
