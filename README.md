@@ -2,7 +2,7 @@
 A portal to your self-hosted applications. Simply put, it's an application of links.
 
 ## demo
-<sup>Required: `linux` `npm` `docker-compose`</sup>
+<sup>Required: `npm` `docker-compose`</sup>
 
 Demo the product by building and running the application on your local machine. The demo script is setup to demonstrate the application's features. Security isn't enabled and all users have admin rights.
 
