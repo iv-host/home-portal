@@ -1,10 +1,10 @@
 #!/bin/bash
 
+cd $(dirname "$(realpath $0)")
+
 STARTUP_ATTEMPT=0
 STARTUP_MAX_ATTEMPTS=10
 STARTUP_WAIT_TIME=5
-
-cd $(dirname "$(realpath $0)")
 
 docker-compose up -d || exit 1;
 

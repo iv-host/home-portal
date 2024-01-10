@@ -8,6 +8,7 @@ Demo the product by building and running the application on your local machine. 
 
 Build & Start:
 ```
+npm install
 npm run build
 npm run demo:up
 ```

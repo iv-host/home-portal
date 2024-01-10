@@ -2,15 +2,39 @@
   "name": "home-portal",
   "version": "0.1-SNAPSHOT",
   "description": "",
+  "author": "isaiah.v",
   "scripts": {
-    "demo:up": "scripts/demo/demo-up.sh;",
-    "demo:down": "scripts/demo/demo-down.sh;",
-    "dev:up": "cd scripts/dev; docker-compose up -d",
-    "dev:down": "cd scripts/dev; docker-compose down",
-    "build": "npm run build-in-docker:image && npm run build-in-docker:run && npm run build:image",
-    "build-in-docker:image": "scripts/build-in-docker/build-image.sh",
-    "build-in-docker:run": "scripts/build-in-docker/build.sh;",
-    "build:image": "scripts/docker/build-image.sh"
+    "build": "npm run build-in-docker && npm run build-image",
+    
+    "prebuild-in-docker": "run-script-os",
+    "prebuild-in-docker:linux": "scripts/build-in-docker/build-image.sh",
+    "prebuild-in-docker:win32": "scripts\\build-in-docker\\build-image",
+    
+    "build-in-docker": "run-script-os",
+    "build-in-docker:linux": "scripts/build-in-docker/build.sh",
+    "build-in-docker:win32": "scripts\\build-in-docker\\build",
+    
+    "build-image": "run-script-os",
+    "build-image:linux": "scripts/docker/build-image.sh",
+    "build-image:win32": "scripts\\docker\\build-image",
+
+    "demo:up": "run-script-os",
+    "demo:up:linux": "scripts/demo/demo-up.sh;",
+    "demo:up:win32": "scripts\\demo\\demo-up;",
+
+    "demo:down": "run-script-os",
+    "demo:down:linux": "scripts/demo/demo-down.sh;",
+    "demo:down:win32": "scripts\\demo\\demo-down",
+
+    "dev:up": "run-script-os",
+    "dev:up:linux": "cd scripts/dev; docker-compose up -d",
+    "dev:up:win32": "cd scripts\\dev && docker-compose up -d",
+
+    "dev:down": "run-script-os",
+    "dev:down:linux": "cd scripts/dev; docker-compose down",
+    "dev:down:win32": "cd scripts\\dev && docker-compose down"
   },
-  "author": "isaiah.v"
+  "devDependencies": {
+    "run-script-os": "^1.1.6"
+  }
 }
