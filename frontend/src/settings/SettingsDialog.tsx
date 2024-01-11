@@ -67,27 +67,29 @@ export const SettingsDialog = (props: SettingsDialogProps) => {
               value={value}
               onChange={handleChange}
               aria-label="Vertical tabs example"
-              sx={{ borderRight: 1, borderColor: 'divider' }}
+              sx={{ overflow: "visible", width: 150, minWidth: 150, borderRight: 1, borderColor: 'divider' }}
             >
               <Tab label="Links" id ="vertical-tab-0" />
               <Tab label="Backgrounds" id ="vertical-tab-1" />
               <Tab label="Info" id ="vertical-tab-2" />
             </Tabs>
-            <div
-                role="tabpanel"
-                hidden={value !== 0}
-                style={{width: "100%"}}>
-              <LinkTab {...props} />
-            </div>
-            <div
-                role="tabpanel"
-                hidden={value !== 1}>
-              <BackgroundsTab {...props} />
-            </div>
-            <div
-                role="tabpanel"
-                hidden={value !== 2}>
-              <InfoTab {...props} />
+            <div style={{width: "100%", maxHeight: "400px", overflow: "auto"}}>
+              <div
+                  role="tabpanel"
+                  hidden={value !== 0}
+                  style={{width: "100%"}}>
+                <LinkTab {...props} />
+              </div>
+              <div
+                  role="tabpanel"
+                  hidden={value !== 1}>
+                <BackgroundsTab {...props} />
+              </div>
+              <div
+                  role="tabpanel"
+                  hidden={value !== 2}>
+                <InfoTab {...props} />
+              </div>
             </div>
           </Box>
         </DialogContent>

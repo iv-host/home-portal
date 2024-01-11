@@ -13,7 +13,8 @@ import { request } from "../services/ServiceResponse";
 import { nop } from "../utils/FunctionUtils";
 
 const ImageCardContainer = styled("div")(({ theme }) => ({
-  display: "flex"
+  display: "flex",
+  flexWrap: "wrap",
 }));
 
 const ImageCard = styled("div")(({ theme }) => ({
@@ -83,12 +84,13 @@ const BackgroundCard = (props: BackgroundCardProps) => {
 interface CreateNewImageCardProps {
   upload: (form: FormData)=>Promise<void>
   height: number,
+  width: number,
 }
 
 const CreateNewImageCard = (props: CreateNewImageCardProps) => {
 
   return <AddBackgroundForm {...props} >
-    <ImageCard style={{height: `${props.height}px`}} >
+    <ImageCard style={{height: `${props.height}px`, width: `${props.width}px`}} >
       <div style={{display: "grid", justifyContent: "center"}}>
         <Avatar>
           <AddIcon/>
@@ -183,6 +185,7 @@ export const BackgroundsTab = (props: BackgroundsTabProps) => {
       })}
       <CreateNewImageCard 
           height={imgHeight}
+          width={imgWidth}
           upload={handleUpload}/>
     </ImageCardContainer>
   </>

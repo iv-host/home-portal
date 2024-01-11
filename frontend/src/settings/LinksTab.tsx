@@ -308,7 +308,6 @@ export const LinkTab = (props: LinkTabProps) => {
         />
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size="medium"
           >
