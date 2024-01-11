@@ -36,8 +36,7 @@ const LinkCardImage = styled('div')(({ theme }) => ({
 
 const LinkCardIcon = styled('div')(({ theme }) => ({
   margin: "auto",
-  width: "45px",
-  height: "60px",
+  width: "45px"
 }));
 
 const LinkCardImg = styled('img')(({ theme }) => ({
@@ -45,7 +44,14 @@ const LinkCardImg = styled('img')(({ theme }) => ({
   height: "45px",
 }));
 
+const LinkCardNameContainer = styled('div')(({ theme }) => ({
+  height: "2.5em",
+  display: "flex",
+  padding: "4px"
+}));
+
 const LinkCardName = styled('div')(({ theme }) => ({
+  margin: "auto",
   textWrap: "wrap",
   textAlign: "center",
   fontFamily: "Arial, Helvetica, sans-serif",
@@ -66,8 +72,10 @@ export const LinkCard = ({ name, href, icon }: LinkCardProps) => {
           <LinkCardImg src={icon ? icon : noimage} draggable={false}/>
         </LinkCardIcon>
       </LinkCardImage>
-      <LinkCardName>
-        {name}
-      </LinkCardName>
+      <LinkCardNameContainer>
+        <LinkCardName>
+          {name}
+        </LinkCardName>
+      </LinkCardNameContainer>
     </LinkCardAnchor>
 }

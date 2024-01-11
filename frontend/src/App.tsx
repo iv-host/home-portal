@@ -17,6 +17,7 @@ const LinkContainer  = styled('div')(({ theme }) => ({
   flexWrap: "wrap",
   justifyContent: "left",
   alignContent: "flex-start",
+  overflow: "auto",
 
   [theme.breakpoints.down('sm')]: {
     display: "grid",
