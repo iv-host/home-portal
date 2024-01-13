@@ -25,26 +25,6 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_DATABASE: home
       MYSQL_ROOT_PASSWORD: password
-
-  # liquibase: database setup. takes about 1 minute to finish.
-  # liquibase:
-  #  image: liquibase/liquibase:4.25.0
-  #  environment:
-  #    INSTALL_MYSQL: 'true'
-  #  links:
-  #    - db
-  #  volumes:
-  #    - ../../database:/liquibase/changelog:ro
-  #  command: [
-  #    "--url=jdbc:mysql://db:3306/home?allowPublicKeyRetrieval=true&autoReconnect=true",
-  #    "--changeLogFile=db.changelog-root.yml",
-  #    "--username=home",
-  #    "--password=password",
-  #    "update"
-  #  ]
-  #  depends_on:
-  #     db:
-  #       condition: service_healthy
   
   # keycloak: OAuth2
   keycloak:
