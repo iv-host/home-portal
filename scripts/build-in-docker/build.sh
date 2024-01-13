@@ -8,3 +8,5 @@ docker run \
   -v ${PWD}/:/build \
   -e npm_package_version=${npm_package_version} \
   home-portal-build
+
+docker image rm home-portal-build
