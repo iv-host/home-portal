@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh
 
 PROFILE=" \
   -Dserver.forward-headers-strategy=FRAMEWORK \
