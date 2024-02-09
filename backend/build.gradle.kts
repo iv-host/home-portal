@@ -41,6 +41,8 @@ dependencies {
 
     // DB Drivers
     implementation("com.mysql:mysql-connector-j:8.2.0")
+    implementation("com.h2database:h2:2.2.224")
+
 
     // Test
     testImplementation(kotlin("test"))

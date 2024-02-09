@@ -21,9 +21,8 @@ private const val INSERT_BACKGROUND = """
 """
 
 private const val DELETE_BACKGROUND_IMAGE = """
-    DELETE background, image
-    FROM background INNER JOIN image ON background.image_id=image.id
-    WHERE image.filename = #{filename}
+    DELETE FROM BACKGROUND 
+    WHERE EXISTS (SELECT 1 FROM IMAGE WHERE BACKGROUND.IMAGE_ID=IMAGE.ID AND IMAGE.FILENAME=#{filename});
 """
 
 @Mapper

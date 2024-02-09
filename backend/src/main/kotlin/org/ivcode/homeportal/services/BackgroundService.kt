@@ -49,5 +49,7 @@ public class BackgroundService(
         if(count==0) {
             throw NotFoundException()
         }
+
+        imageService.deleteImage(IMAGE_PATH, filename)
     }
 }

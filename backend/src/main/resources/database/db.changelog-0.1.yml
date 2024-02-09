@@ -191,11 +191,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg'
       rollback:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg')
 
   # Demo Background Image #2
@@ -204,11 +204,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-snowflake.jpg'
       rollback:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-snowflake.jpg')
 
   # Demo Link Google
@@ -217,11 +217,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Google' AS name, 'https://www.google.com/' FROM image WHERE path='/link/Google' AND filename='google.png'
       rollback:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: DELETE FROM link WHERE name='Google'
   
   # Demo Link Yahoo
@@ -230,11 +230,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Yahoo' AS name, 'https://www.yahoo.com/' FROM image WHERE path='/link/Yahoo' AND filename='yahoo.png'
       rollback:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: DELETE FROM link WHERE name='Yahoo'
 
   # Demo Link Bing
@@ -243,9 +243,9 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Bing' AS name, 'https://www.bing.com/' FROM image WHERE path='/link/Bing' AND filename='bing.png'
       rollback:
         - sql:
-            dbms:  'mysql'
+            dbms:  'h2, mysql'
             sql: DELETE FROM link WHERE name='Bing'
