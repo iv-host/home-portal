@@ -5,9 +5,15 @@ node {
         sh './scripts/build-in-docker/build-image.sh'
     }
 
-    stage("build-in-docker") {
-        docker.image('home-portal-build:latest').inside {
+    docker.image('home-portal-build:latest').inside {
+
+        stage("build-in-docker") {
             sh './scripts/build/build.sh'
         }
+
+        stage("publish") {
+            echo 'publish'
+        }
     }
+
 }

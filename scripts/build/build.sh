@@ -4,10 +4,7 @@ cd $(dirname "$(realpath $0)")
 cd ../../
 
 pushd ./backend
-./gradlew clean build -PwithFrontend
 
-if [ $? -ne 0 ]; then
-  exit 1
-fi
+./gradlew clean build -PwithFrontend || exit 1
 
 popd

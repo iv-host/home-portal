@@ -4,7 +4,9 @@
   "description": "",
   "author": "isaiah.v",
   "scripts": {
-    "build": "npm run build-in-docker && npm run build-image",
+
+    "build": "run-script-os",
+    "build:linux": "scripts/build/build.sh",
     
     "prebuild-in-docker": "run-script-os",
     "prebuild-in-docker:linux": "scripts/build-in-docker/build-image.sh",
@@ -13,7 +15,7 @@
     "build-in-docker": "run-script-os",
     "build-in-docker:linux": "scripts/build-in-docker/build.sh",
     "build-in-docker:win32": "scripts\\build-in-docker\\build",
-    
+
     "build-image": "run-script-os",
     "build-image:linux": "scripts/docker/build-image.sh",
     "build-image:win32": "scripts\\docker\\build-image",
