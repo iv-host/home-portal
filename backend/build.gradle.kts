@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
@@ -6,8 +8,12 @@ plugins {
     application
 }
 
+val projectInfo: Map<String, String> by extra {
+    JsonSlurper().parse(file("../project.json")) as Map<String, String>
+}
+
 group = "org.ivcode"
-version = System.getenv("npm_package_version") ?: "dev-build"
+version = projectInfo["version"] ?: "dev-build"
 
 repositories {
     mavenCentral()
@@ -61,9 +67,14 @@ tasks.getByName<Jar>("jar") {
 if(project.hasProperty("withFrontend")) {
 
     // An extension to run commands
-    fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): Int {
+    fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile, env: Map<String, Any> = mapOf()): Int {
         println("> $this")
+
+        val envMap:MutableMap<String, Any> = System.getenv().toMutableMap()
+        envMap.putAll(env)
+
         return project.exec {
+            environment = envMap
             workingDir = workingDirectory
             commandLine = this@runCommand.split("\\s".toRegex())
         }.exitValue
@@ -82,18 +93,23 @@ if(project.hasProperty("withFrontend")) {
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
     tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
 
+    val npmEnv = mapOf<String, Any> (
+        "npm_package_name" to projectInfo["name"] as Any,
+        "npm_package_version" to projectInfo["version"] as Any
+    )
+
     // Clean the frontend
     tasks.register("clean-frontend") {
         doLast {
-            "npm run clean".runCommand(frontendDirectory)
+            "npm run clean".runCommand(frontendDirectory, npmEnv)
         }
     }
 
     // Build the frontend
     tasks.register("build-frontend") {
         doLast {
-            "npm install".runCommand(frontendDirectory)
-            "npm run build".runCommand(frontendDirectory)
+            "npm install".runCommand(frontendDirectory, npmEnv)
+            "npm run build".runCommand(frontendDirectory, npmEnv)
         }
     }
 

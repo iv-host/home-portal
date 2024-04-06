@@ -1,6 +1,8 @@
+import groovy.json.JsonSlurper;
+
 node {
     checkout scm
-    sh 'nvm use 18'
+    def projectInfo = JsonSlurper().parse(file("project.json"))
 
     stage("build-in-docker-image") {
         sh './scripts/build-in-docker/build-image.sh'
@@ -18,7 +20,7 @@ node {
     }
 
     stage("build-docker") {
-        sh "npm run build-image"
+        sh "PROJECT_NAME=${projectInfo["name"]} && PROJECT_VERSION=${projectInfo["version"]} && /scripts/docker/build-image.sh"
     }
     stage("publish-docker") {
         sh "publish"

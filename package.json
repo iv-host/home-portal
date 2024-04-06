@@ -34,7 +34,9 @@
 
     "dev:down": "run-script-os",
     "dev:down:linux": "cd scripts/dev; docker-compose down",
-    "dev:down:win32": "cd scripts\\dev && docker-compose down"
+    "dev:down:win32": "cd scripts\\dev && docker-compose down",
+
+    "env": "env"
   },
   "devDependencies": {
     "run-script-os": "^1.1.6"
