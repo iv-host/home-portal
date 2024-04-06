@@ -16,5 +16,3 @@ RUN wget https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d713
   && mv ./jdk-17.0.2 /usr/local/openjdk-17
 ENV JAVA_HOME=/usr/local/openjdk-17
 ENV PATH=${JAVA_HOME}/bin:${PATH}
-
-ENTRYPOINT ["./scripts/build/build.sh"]
