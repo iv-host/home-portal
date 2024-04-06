@@ -46,7 +46,7 @@ export const InfoTab = (props: InfoTabProps) => {
       v => setVersion(v),
       msg => props.onError ? props.onError(msg) : nop()
     )
-  }, [])
+  })
 
 
   return <UnorderedList>

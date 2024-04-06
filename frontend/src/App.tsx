@@ -59,7 +59,7 @@ function App() {
   }, [])
 
   const isReady = ():boolean => {
-    return userInfo!=undefined && links!=undefined && background!=undefined
+    return userInfo!==undefined && links!==undefined && background!==undefined
   }
 
   return <>

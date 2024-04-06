@@ -15,6 +15,6 @@ export const getConfig = () => {
   if(config) {
     return config;
   } else {
-    throw `Unknown Environment: ${ENVIRONMENT}`
+    throw new Error(`Unknown Environment: ${ENVIRONMENT}`)
   }
 }

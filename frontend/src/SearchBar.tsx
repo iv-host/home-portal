@@ -7,12 +7,12 @@ import { Link } from './services/LinksService';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, theme.palette.mode=='dark' ? 0.05 : 0.45),
+  backgroundColor: alpha(theme.palette.common.white, theme.palette.mode==='dark' ? 0.05 : 0.45),
   marginLeft: 0,
   width: '100%',
 
   '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, theme.palette.mode=='dark' ? 0.15 : 0.75),
+    backgroundColor: alpha(theme.palette.common.white, theme.palette.mode==='dark' ? 0.15 : 0.75),
   },
 
   [theme.breakpoints.up('sm')]: {
@@ -99,7 +99,7 @@ const ListItemLink = (props: ListItemLinkProps) => {
   const { name, href, icon } = link;
 
   return <ListItemAncor href={href}>
-    <img style={{width: "25px", height: "25px"}} src={icon} />
+    <img style={{width: "25px", height: "25px"}} src={icon} alt="" />
     <span style={{marginLeft: "15px"}}>{name}</span>
   </ListItemAncor>
 }

@@ -18,7 +18,7 @@ export const AddBackgroundForm = (props: React.PropsWithChildren<AddBackgroundFo
 
     const form = formRef.current
     if(!form) {
-      throw "upload form not found"
+      throw new Error("upload form not found")
     }
 
     const formData = new FormData(formRef.current!);
