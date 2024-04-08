@@ -13,7 +13,7 @@ node {
 
         stage("publish") {
             withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn"
+                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn/publish-mvn.sh"
             }
         }
     }
