@@ -1,8 +1,6 @@
-import groovy.json.JsonSlurper;
-
 node {
     checkout scm
-    def projectInfo = JsonSlurper().parse(file("project.json"))
+    def projectInfo = readJSON file: 'project.json'
 
     stage("build-in-docker-image") {
         sh './scripts/build-in-docker/build-image.sh'
@@ -10,17 +8,18 @@ node {
 
     docker.image('home-portal-build:latest').inside {
         stage("build") {
-            sh 'npm install'
-            sh 'npm run build'
+            sh './scripts/build/build.sh'
         }
 
         stage("publish") {
-            echo 'publish'
+            withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
+                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn"
+            }
         }
     }
 
     stage("build-docker") {
-        sh "PROJECT_NAME=${projectInfo["name"]} && PROJECT_VERSION=${projectInfo["version"]} && /scripts/docker/build-image.sh"
+        sh "export PROJECT_NAME=${projectInfo["name"]} && export PROJECT_VERSION=${projectInfo["version"]} && scripts/docker/build-image.sh"
     }
     stage("publish-docker") {
         sh "publish"

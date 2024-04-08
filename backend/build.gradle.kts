@@ -5,15 +5,55 @@ plugins {
     kotlin("plugin.spring") version "1.9.22"
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.0"
+    `maven-publish`
     application
 }
 
+java {
+    withSourcesJar()
+}
 val projectInfo: Map<String, String> by extra {
     JsonSlurper().parse(file("../project.json")) as Map<String, String>
 }
 
 group = "org.ivcode"
 version = projectInfo["version"] ?: "dev-build"
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            val mvnUri = project.properties["mvnUri"]?.toString()
+            val mvnUsername = project.properties["mvnUsername"]?.toString()
+            val mvnPassword = project.properties["mvnPassword"]?.toString()
+
+            if(mvnUri!=null) {
+                url = uri(mvnUri)
+            }
+
+            if(mvnUsername!=null || mvnPassword!=null) {
+                credentials(PasswordCredentials::class.java) {
+                    if(mvnUsername!=null) {
+                        username = mvnUsername
+                    }
+
+                    if(mvnPassword!=null) {
+                        password = mvnPassword
+                    }
+                }
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
