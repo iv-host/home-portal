@@ -1,3 +1,19 @@
+/*
+ * Jenkins Build Script
+ *
+ * Jenkins Plugins:
+ *   - Docker Pipeline
+ *   - Pipeline Utility Steps
+ *
+ * Environmental Variables:
+ *   - MVN_URI_SNAPSHOT: The uri to the snapshot repository
+ *   - DOCKER_URI_SNAPSHOT: The uri to the snapshot registry
+ *
+ * Credentials:
+ *   - mvn-snapshot: basic auth credentials for publishing artifacts to mvn
+ *   - docker-snapshot: basic auth credentials for publishing artifacts to docker
+ */
+
 def isSnapshot(String version) {
     return version.endsWith("-SNAPSHOT")
 }
@@ -5,6 +21,10 @@ def isSnapshot(String version) {
 node {
     checkout scm
     def projectInfo = readJSON file: 'project.json'
+
+    def projectName = projectInfo["name"]
+    def projectVersion = projectInfo["version"]
+    echo "${projectName}:${projectVersion}"
 
     def buildImage = docker.build("home-portal-build:latest", "./scripts/build-in-docker")
 
@@ -17,14 +37,25 @@ node {
             withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
                 sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn/publish-mvn.sh"
             }
+
+            if(!isSnapshot(projectVersion) {
+                throw new UnsupportedOperationException("release not yet defined")
+            }
         }
     }
 
     stage("build-docker") {
-        sh "export PROJECT_NAME=${projectInfo["name"]} && export PROJECT_VERSION=${projectInfo["version"]} && scripts/docker/build-image.sh"
+        docker.build("${projectName}:${projectVersion}", "./scripts/docker")
     }
 
     stage("publish-docker") {
-        echo "publish"
+        docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
+            docker.build("${projectName}:${projectVersion}", "./scripts/docker").push()
+            docker.build("${projectName}:latest", "./scripts/docker").push()
+        }
+
+        if(!isSnapshot(projectVersion) {
+            throw new UnsupportedOperationException("release not yet defined")
+        }
     }
 }
