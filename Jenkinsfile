@@ -35,10 +35,10 @@ node {
 
         stage("publish") {
             withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn/publish-mvn.sh"
+                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/publish-mvn/publish-mvn.sh";
             }
 
-            if(!isSnapshot(projectVersion) {
+            if(!isSnapshot(projectVersion)) {
                 throw new UnsupportedOperationException("release not yet defined")
             }
         }
@@ -54,7 +54,7 @@ node {
             docker.build("${projectName}:latest", "./scripts/docker").push()
         }
 
-        if(!isSnapshot(projectVersion) {
+        if(!isSnapshot(projectVersion)) {
             throw new UnsupportedOperationException("release not yet defined")
         }
     }
