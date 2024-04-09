@@ -1,12 +1,14 @@
+def isSnapshot(String version) {
+    return version.endsWith("-SNAPSHOT")
+}
+
 node {
     checkout scm
     def projectInfo = readJSON file: 'project.json'
 
-    stage("build-in-docker-image") {
-        sh './scripts/build-in-docker/build-image.sh'
-    }
+    def buildImage = docker.build("home-portal-build:latest", "./scripts/build-in-docker")
 
-    docker.image('home-portal-build:latest').inside {
+    buildImage.inside {
         stage("build") {
             sh './scripts/build/build.sh'
         }
@@ -21,6 +23,7 @@ node {
     stage("build-docker") {
         sh "export PROJECT_NAME=${projectInfo["name"]} && export PROJECT_VERSION=${projectInfo["version"]} && scripts/docker/build-image.sh"
     }
+
     stage("publish-docker") {
         echo "publish"
     }
