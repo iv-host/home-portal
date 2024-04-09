@@ -22,6 +22,6 @@ node {
         sh "export PROJECT_NAME=${projectInfo["name"]} && export PROJECT_VERSION=${projectInfo["version"]} && scripts/docker/build-image.sh"
     }
     stage("publish-docker") {
-        sh "publish"
+        echo "publish"
     }
 }
