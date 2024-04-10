@@ -37,7 +37,8 @@ node {
             }
         }
 
-        docker.image("amazoncorretto:21-alpine").inside {
+        def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
+        buildImg.inside {
             stage("build-backend") {
                 sh './scripts/jenkins/build/build.sh'
             }
