@@ -12,5 +12,7 @@ docker run \
  --env DATABASE_USERNAME=root \
  --env DATABASE_PASSWORD=password \
  --publish 8080:8080 \
+ --name home-portal-demo \
  registry.ivcode.org/home-portal
 ```
+
