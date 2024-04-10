@@ -7,7 +7,7 @@ if [ -z "$MVN_USERNAME" ]; then echo "MVN_USERNAME not set"; exit 1; fi;
 if [ -z "$MVN_PASSWORD" ]; then echo "MVN_PASSWORD not set"; exit 1; fi;
 
 cd $(dirname "$(realpath "$0")")
-cd ../../
+cd ../../../
 
 pushd ./backend
 

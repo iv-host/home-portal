@@ -3,7 +3,7 @@
 # Builds the project
 
 cd $(dirname "$(realpath "$0")")
-cd ../../
+cd ../../../
 
 pushd ./backend
 
