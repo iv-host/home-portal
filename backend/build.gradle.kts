@@ -106,26 +106,11 @@ tasks.getByName<Jar>("jar") {
  */
 if(project.hasProperty("withFrontend")) {
 
-    // An extension to run commands
-    fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile, env: Map<String, Any> = mapOf()): Int {
-        println("> $this")
-
-        val envMap:MutableMap<String, Any> = System.getenv().toMutableMap()
-        envMap.putAll(env)
-
-        return project.exec {
-            environment = envMap
-            workingDir = workingDirectory
-            commandLine = this@runCommand.split("\\s".toRegex())
-        }.exitValue
-    }
-
     val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
     val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
     val publicDirectory = File(resourcesDirectory, "main/public")
 
     // Update task chain to include new tasks
-    tasks.named("clean").configure{ dependsOn("clean-frontend") }
     tasks.named("test").configure{ dependsOn("copy-frontend") }
     tasks.named("test").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
@@ -133,29 +118,9 @@ if(project.hasProperty("withFrontend")) {
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
     tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
 
-    val npmEnv = mapOf<String, Any> (
-        "npm_package_name" to projectInfo["name"] as Any,
-        "npm_package_version" to projectInfo["version"] as Any
-    )
-
-    // Clean the frontend
-    tasks.register("clean-frontend") {
-        doLast {
-            "npm run clean".runCommand(frontendDirectory, npmEnv)
-        }
-    }
-
-    // Build the frontend
-    tasks.register("build-frontend") {
-        doLast {
-            "npm install".runCommand(frontendDirectory, npmEnv)
-            "npm run build".runCommand(frontendDirectory, npmEnv)
-        }
-    }
-
     // Copy frontend to the build's /resources/public
     tasks.register<Copy>("copy-frontend") {
-        dependsOn(":processResources",":build-frontend")
+        dependsOn(":processResources")
         from(file(File(frontendDirectory,"build").absolutePath))
         into(publicDirectory.absolutePath)
     }
