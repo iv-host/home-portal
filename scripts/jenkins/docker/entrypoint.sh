@@ -25,4 +25,5 @@ if [ "$(echo "$OAUTH2_ENABLED" | awk '{print tolower($0)}')" = "true" ]; then
 fi
 
 
-java "$PROFILE" -jar home-portal.jar
+# shellcheck disable=SC2086
+java $PROFILE -jar home-portal.jar
