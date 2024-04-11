@@ -43,9 +43,8 @@ node {
                 sh './scripts/jenkins/build/build.sh'
             }
 
-            stage("publish") {
-                if (env.BRANCH_NAME == 'main') {
-                    // do steps here
+            if (env.BRANCH_NAME == 'main') {
+                stage("publish") {
                     withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
                         sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
                     }
@@ -61,8 +60,8 @@ node {
             docker.build("${projectName}:${projectVersion}", "--file ./scripts/jenkins/docker/Dockerfile .")
         }
 
-        stage("publish-docker") {
-            if (env.BRANCH_NAME == 'main') {
+        if (env.BRANCH_NAME == 'main') {
+            stage("publish-docker") {
                 docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
                     def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
                     image.push(projectVersion)
