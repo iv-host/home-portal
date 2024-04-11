@@ -29,11 +29,6 @@ interface Row {
   href: string
 }
 
-interface EditColumn {
-  rowId: number,
-  column: keyof Row
-}
-
 function createRowArray(links: Link[]): Row[] {
   return links.map((link, i) => createRow(i, link))
 }
@@ -98,7 +93,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, rowCount, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler =
     (property: keyof Row) => (event: React.MouseEvent<unknown>) => {
@@ -236,7 +231,7 @@ export const LinkTab = (props: LinkTabProps) => {
 
   React.useEffect(() => {
     load()
-  }, [])
+  })
 
   React.useEffect(() => {
     setRows(createRowArray(links))
@@ -255,7 +250,7 @@ export const LinkTab = (props: LinkTabProps) => {
 
   const handleDeleteLink =  async () => {
     if(!deleteDialog_row) {
-      throw "delete row not defined"
+      throw new Error("delete row not defined")
     }
 
     await request(LinkService.deleteLink(deleteDialog_row?.name),
@@ -338,7 +333,7 @@ export const LinkTab = (props: LinkTabProps) => {
                     <TableCell 
                       sx={{ padding: 0 }}
                     >
-                      <img src={row.icon} style={{ height: "32px", width: "32px" }} />
+                      <img src={row.icon} style={{ height: "32px", width: "32px" }} alt="" />
                     </TableCell>
                     <TableCell>{row.href}</TableCell>
                     <TableCell 

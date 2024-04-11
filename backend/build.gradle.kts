@@ -1,13 +1,59 @@
+import groovy.json.JsonSlurper
+
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.0"
+    `maven-publish`
     application
 }
 
+java {
+    withSourcesJar()
+}
+val projectInfo: Map<String, String> by extra {
+    JsonSlurper().parse(file("../project.json")) as Map<String, String>
+}
+
 group = "org.ivcode"
-version = System.getenv("npm_package_version") ?: "dev-build"
+version = projectInfo["version"] ?: "dev-build"
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            from(components["java"])
+        }
+    }
+
+    repositories {
+        maven {
+            val mvnUri = project.properties["mvnUri"]?.toString()
+            val mvnUsername = project.properties["mvnUsername"]?.toString()
+            val mvnPassword = project.properties["mvnPassword"]?.toString()
+
+            if(mvnUri!=null) {
+                url = uri(mvnUri)
+            }
+
+            if(mvnUsername!=null || mvnPassword!=null) {
+                credentials(PasswordCredentials::class.java) {
+                    if(mvnUsername!=null) {
+                        username = mvnUsername
+                    }
+
+                    if(mvnPassword!=null) {
+                        password = mvnPassword
+                    }
+                }
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
@@ -60,21 +106,11 @@ tasks.getByName<Jar>("jar") {
  */
 if(project.hasProperty("withFrontend")) {
 
-    // An extension to run commands
-    fun String.runCommand(workingDirectory: File = layout.projectDirectory.asFile): Int {
-        println("> $this")
-        return project.exec {
-            workingDir = workingDirectory
-            commandLine = this@runCommand.split("\\s".toRegex())
-        }.exitValue
-    }
-
     val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
     val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
     val publicDirectory = File(resourcesDirectory, "main/public")
 
     // Update task chain to include new tasks
-    tasks.named("clean").configure{ dependsOn("clean-frontend") }
     tasks.named("test").configure{ dependsOn("copy-frontend") }
     tasks.named("test").configure{ dependsOn("write-version") }
     tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
@@ -82,24 +118,9 @@ if(project.hasProperty("withFrontend")) {
     tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
     tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
 
-    // Clean the frontend
-    tasks.register("clean-frontend") {
-        doLast {
-            "npm run clean".runCommand(frontendDirectory)
-        }
-    }
-
-    // Build the frontend
-    tasks.register("build-frontend") {
-        doLast {
-            "npm install".runCommand(frontendDirectory)
-            "npm run build".runCommand(frontendDirectory)
-        }
-    }
-
     // Copy frontend to the build's /resources/public
     tasks.register<Copy>("copy-frontend") {
-        dependsOn(":processResources",":build-frontend")
+        dependsOn(":processResources")
         from(file(File(frontendDirectory,"build").absolutePath))
         into(publicDirectory.absolutePath)
     }

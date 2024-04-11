@@ -12,7 +12,7 @@ PROFILE=" \
 [ ! -z "$DATABASE_USERNAME" ] && PROFILE="$PROFILE -Dspring.datasource.username=$DATABASE_USERNAME"
 [ ! -z "$DATABASE_PASSWORD" ] && PROFILE="$PROFILE -Dspring.datasource.password=$DATABASE_PASSWORD"
 
-if [ "$(echo $OAUTH2_ENABLED | awk '{print tolower($0)}')" = "true" ]; then
+if [ "$(echo "$OAUTH2_ENABLED" | awk '{print tolower($0)}')" = "true" ]; then
   PROFILE="$PROFILE -Dsecurity.oauth2.enabled=true"
 
   [ ! -z "$OAUTH2_ADMIN" ] && PROFILE="$PROFILE -Dsecurity.oauth2.admin=$OAUTH2_ADMIN" || { echo "'OAUTH2_ADMIN' env variable is required if OAuth2 is enabled"; exit 1; }
@@ -25,4 +25,5 @@ if [ "$(echo $OAUTH2_ENABLED | awk '{print tolower($0)}')" = "true" ]; then
 fi
 
 
+# shellcheck disable=SC2086
 java $PROFILE -jar home-portal.jar
