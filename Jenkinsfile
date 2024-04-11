@@ -44,12 +44,15 @@ node {
             }
 
             stage("publish") {
-                withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                    sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
-                }
+                if (env.BRANCH_NAME == 'main') {
+                    // do steps here
+                    withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
+                        sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
+                    }
 
-                if(!isSnapshot(projectVersion)) {
-                    throw new UnsupportedOperationException("release process not yet defined")
+                    if(!isSnapshot(projectVersion)) {
+                        throw new UnsupportedOperationException("release process not yet defined")
+                    }
                 }
             }
         }
@@ -59,14 +62,16 @@ node {
         }
 
         stage("publish-docker") {
-            docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-                def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
-                image.push(projectVersion)
-                image.push("latest")
-            }
+            if (env.BRANCH_NAME == 'main') {
+                docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
+                    def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
+                    image.push(projectVersion)
+                    image.push("latest")
+                }
 
-            if(!isSnapshot(projectVersion)) {
-                throw new UnsupportedOperationException("release process not yet defined")
+                if(!isSnapshot(projectVersion)) {
+                    throw new UnsupportedOperationException("release process not yet defined")
+                }
             }
         }
     }
