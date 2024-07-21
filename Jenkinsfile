@@ -21,9 +21,20 @@ def isSnapshot(String version) {
 node {
     checkout scm
 
-    def projectInfo = readJSON file: 'project.json'
-    def projectName = projectInfo["name"]
-    def projectVersion = projectInfo["version"]
+    def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
+
+    stage("prepare") {
+        buildImg.inside {
+            def projectName = sh (
+                script: './gradlew info_name -q',
+                returnStdout: true
+            ).trim()
+            def projectVersion = sh (
+               script: './gradlew info_version -q',
+               returnStdout: true
+            ).trim()
+        }
+    }
 
     withEnv([
         "PROJECT_NAME=${projectName}",
@@ -31,7 +42,6 @@ node {
     ]) {
         echo '$PROJECT_NAME:$PROJECT_VERSION'
 
-        def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
         buildImg.inside {
             stage("build-backend") {
                 sh './scripts/jenkins/build/build.sh'
