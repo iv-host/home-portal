@@ -5,8 +5,4 @@
 cd $(dirname "$(realpath "$0")")
 cd ../../../
 
-pushd ./backend
-
-./gradlew clean build -PwithFrontend || exit 1
-
-popd
+./gradlew clean build || exit 1
