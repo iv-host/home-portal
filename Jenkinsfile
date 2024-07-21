@@ -31,12 +31,6 @@ node {
     ]) {
         echo '$PROJECT_NAME:$PROJECT_VERSION'
 
-        docker.image('node:18').inside {
-            stage("build-frontend") {
-                sh './scripts/jenkins/build-frontend/build.sh'
-            }
-        }
-
         def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
         buildImg.inside {
             stage("build-backend") {

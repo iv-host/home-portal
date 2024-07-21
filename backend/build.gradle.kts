@@ -1,5 +1,3 @@
-import groovy.json.JsonSlurper
-
 plugins {
     kotlin("jvm") version "1.9.22"
     kotlin("plugin.spring") version "1.9.22"
@@ -12,12 +10,7 @@ plugins {
 java {
     withSourcesJar()
 }
-val projectInfo: Map<String, String> by extra {
-    JsonSlurper().parse(file("../project.json")) as Map<String, String>
-}
 
-group = "org.ivcode"
-version = projectInfo["version"] ?: "dev-build"
 
 publishing {
     publications {
@@ -99,40 +92,35 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-/**
- * If the "withFrontend" parameter is defined, the frontend is built into the jar
- *
- * Note: npm isn't in the classpath when running Gradle in IntelliJ. Running with this property in IntelliJ results in errors
- */
-if(project.hasProperty("withFrontend")) {
 
-    val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
-    val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
-    val publicDirectory = File(resourcesDirectory, "main/public")
+val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
+val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
+val publicDirectory = File(resourcesDirectory, "main/public")
 
-    // Update task chain to include new tasks
-    tasks.named("test").configure{ dependsOn("copy-frontend") }
-    tasks.named("test").configure{ dependsOn("write-version") }
-    tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
-    tasks.named("bootJar").configure{ dependsOn("write-version") }
-    tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
-    tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
+// Update task chain to include new tasks
+tasks.named("test").configure{ dependsOn("copy-frontend") }
+tasks.named("test").configure{ dependsOn("write-version") }
+tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
+tasks.named("bootJar").configure{ dependsOn("write-version") }
+tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
+tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
 
-    // Copy frontend to the build's /resources/public
-    tasks.register<Copy>("copy-frontend") {
-        dependsOn(":processResources")
-        from(file(File(frontendDirectory,"build").absolutePath))
-        into(publicDirectory.absolutePath)
-    }
+// Copy frontend to the build's /resources/public
+tasks.register<Copy>("copy-frontend") {
+    dependsOn(":frontend:build",":backend:processResources")
+    from(file(File(frontendDirectory,"build").absolutePath))
+    into(publicDirectory.absolutePath)
+}
 
-    // Write version to the build's /resources
-    tasks.register("write-version") {
-        dependsOn(":processResources")
-        doLast {
-            File(resourcesDirectory, "main/version.txt").writeText(text = version as String)
-        }
+// Write version to the build's /resources
+tasks.register("write-version") {
+    dependsOn(":backend:processResources")
+    doLast {
+        File(resourcesDirectory, "main/version.txt").writeText(text = version as String)
     }
 }
+
+tasks.register("prepareKotlinBuildScriptModel"){}
 
 tasks.test {
     useJUnitPlatform()

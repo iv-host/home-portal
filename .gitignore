@@ -21,6 +21,9 @@ out/
 /build
 /lib
 
+# gradle
+.gradle
+
 # misc
 .DS_Store
 .env.local
