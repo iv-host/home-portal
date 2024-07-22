@@ -23,13 +23,17 @@ node {
 
     def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
 
+    projectName = null
+    projectVersion = null
+
     stage("prepare") {
         buildImg.inside {
-            def projectName = sh (
+            projectName = sh (
                 script: './gradlew info_name -q',
                 returnStdout: true
             ).trim()
-            def projectVersion = sh (
+
+            projectVersion = sh (
                script: './gradlew info_version -q',
                returnStdout: true
             ).trim()
@@ -43,7 +47,7 @@ node {
         echo '$PROJECT_NAME:$PROJECT_VERSION'
 
         buildImg.inside {
-            stage("build-backend") {
+            stage("build") {
                 sh './scripts/jenkins/build/build.sh'
             }
 
