@@ -44,7 +44,7 @@ node {
         "PROJECT_NAME=${projectName}",
         "PROJECT_VERSION=${projectVersion}"
     ]) {
-        echo '$PROJECT_NAME:$PROJECT_VERSION'
+        echo "${PROJECT_NAME}:${PROJECT_VERSION}"
 
         buildImg.inside {
             stage("build") {

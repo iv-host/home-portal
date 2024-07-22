@@ -120,6 +120,27 @@ tasks.register("write-version") {
     }
 }
 
+// Copy frontend to the build's /resources/public
+tasks.named("jar").configure{ dependsOn("dockerJar") }
+tasks.register<Copy>("dockerJar") {
+    dependsOn("bootJar")
+
+    val libsPath = layout.buildDirectory.dir("libs").get().asFile
+    val appPath = layout.buildDirectory.dir("dockerJar").get().asFile
+    val appName = "${project.name}-${project.version}.jar"
+
+    from(file(File(libsPath, appName).absolutePath))
+    into(file(appPath.absolutePath))
+
+    rename{ filename ->
+        if(filename == appName) {
+            "${rootProject.name}.jar"
+        } else {
+            filename
+        }
+    }
+}
+
 tasks.register("prepareKotlinBuildScriptModel"){}
 
 tasks.test {
