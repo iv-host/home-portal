@@ -13,6 +13,7 @@
  *   - mvn-snapshot: basic auth credentials for publishing artifacts to mvn
  *   - docker-snapshot: basic auth credentials for publishing artifacts to docker
  */
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 def isSnapshot(String version) {
     return version.endsWith("-SNAPSHOT")
@@ -54,34 +55,40 @@ node {
             sh './scripts/jenkins/build/build.sh'
         }
 
-        if (env.BRANCH_NAME == 'main') {
-            stage("publish") {
-                withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                    sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
-                }
-
-                if(!isSnapshot(projectVersion)) {
-                    throw new UnsupportedOperationException("release process not yet defined")
-                }
+        stage("publish maven") {
+            if(!isPublishToMaven) {
+                Utils.markStageSkippedForConditional(STAGE_NAME)
+                return
             }
-        }
-    }
 
-    stage("build-docker") {
-        docker.build("${projectName}:${projectVersion}", "--file ./scripts/jenkins/docker/Dockerfile .")
-    }
-
-    if (env.BRANCH_NAME == 'main') {
-        stage("publish-docker") {
-            docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-                def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
-                image.push(projectVersion)
-                image.push("latest")
+            withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
+                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
             }
 
             if(!isSnapshot(projectVersion)) {
                 throw new UnsupportedOperationException("release process not yet defined")
             }
+        }
+    }
+
+    stage("build docker") {
+        docker.build("${projectName}:${projectVersion}", "--file ./scripts/jenkins/docker/Dockerfile .")
+    }
+
+    stage("publish docker") {
+        if(!isPublishToDocker) {
+            Utils.markStageSkippedForConditional(STAGE_NAME)
+            return
+        }
+
+        docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
+            def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
+            image.push(projectVersion)
+            image.push("latest")
+        }
+
+        if(!isSnapshot(projectVersion)) {
+            throw new UnsupportedOperationException("release process not yet defined")
         }
     }
 }
