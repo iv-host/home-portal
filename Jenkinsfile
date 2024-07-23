@@ -79,3 +79,12 @@ node {
         }
     }
 }
+
+// Define parameters in the job configuration
+properties([
+    parameters([
+        string(name: 'MY_PARAM', defaultValue: 'default_value', description: 'A string parameter'),
+        booleanParam(name: 'MY_BOOLEAN', defaultValue: true, description: 'A boolean parameter'),
+        choice(name: 'MY_CHOICE', choices: ['Option1', 'Option2', 'Option3'], description: 'A choice parameter')
+    ])
+])
