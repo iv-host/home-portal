@@ -4,6 +4,7 @@
  * Jenkins Plugins:
  *   - Docker Pipeline
  *   - Pipeline Utility Steps
+ *   - Build With Parameters
  *
  * Environmental Variables:
  *   - MVN_URI_SNAPSHOT: The uri to the snapshot repository
@@ -19,11 +20,15 @@ def isSnapshot(String version) {
     return version.endsWith("-SNAPSHOT")
 }
 
-node {
-    def isPublishToMaven = params['Publish To Maven'] ?: false
-    def isPublishToDocker = params['Publish To Docker'] ?: false
+def isMainBranch() {
+    return env.BRANCH_NAME == 'main'
+}
 
-    echo "Publish To Maven: ${isPublishToMaven}"
+node {
+    def isPublishToMaven = params['publish maven'] ?: false
+    def isPublishToDocker = params['publish docker'] ?: false
+
+    echo "publish maven: ${isPublishToMaven}"
     echo "Publish To Docker: ${isPublishToDocker}"
 
     checkout scm
@@ -96,7 +101,7 @@ node {
 // Define parameters in the job configuration
 properties([
     parameters([
-        booleanParam(name: 'Publish To Maven', defaultValue: env.BRANCH_NAME == 'main', description: 'publishes artifacts to the maven repository'),
-        booleanParam(name: 'Publish To Docker', defaultValue: env.BRANCH_NAME == 'main', description: 'publishes the docker image to the docker repository')
+        booleanParam(name: 'publish maven', defaultValue: env.BRANCH_NAME == 'main', description: 'publish to the maven repository'),
+        booleanParam(name: 'publish docker', defaultValue: env.BRANCH_NAME == 'main', description: 'publish to the docker repository')
     ])
 ])
