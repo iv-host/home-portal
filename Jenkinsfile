@@ -29,7 +29,7 @@ node {
     def isPublishToDocker = params['publish docker'] ?: false
 
     echo "publish maven: ${isPublishToMaven}"
-    echo "Publish To Docker: ${isPublishToDocker}"
+    echo "publish docker: ${isPublishToDocker}"
 
     checkout scm
 
