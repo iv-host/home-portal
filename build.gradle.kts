@@ -5,6 +5,9 @@ allprojects {
 
 
 tasks {
+    register("info") {
+        println("${project.name}:${project.version}")
+    }
     register("info_version") {
         println(project.version)
     }
