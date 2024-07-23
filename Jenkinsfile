@@ -19,6 +19,12 @@ def isSnapshot(String version) {
 }
 
 node {
+    def isPublishToMaven = params['Publish To Maven'] ?: false
+    def isPublishToDocker = params['Publish To Docker'] ?: false
+
+    echo "Publish To Maven: ${isPublishToMaven}"
+    echo "Publish To Docker: ${isPublishToDocker}"
+
     checkout scm
 
     def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
@@ -83,8 +89,7 @@ node {
 // Define parameters in the job configuration
 properties([
     parameters([
-        string(name: 'MY_PARAM', defaultValue: 'default_value', description: 'A string parameter'),
-        booleanParam(name: 'MY_BOOLEAN', defaultValue: true, description: 'A boolean parameter'),
-        choice(name: 'MY_CHOICE', choices: ['Option1', 'Option2', 'Option3'], description: 'A choice parameter')
+        booleanParam(name: 'Publish To Maven', defaultValue: env.BRANCH_NAME == 'main', description: 'publishes artifacts to the maven repository'),
+        booleanParam(name: 'Publish To Docker', defaultValue: env.BRANCH_NAME == 'main', description: 'publishes the docker image to the docker repository')
     ])
 ])
