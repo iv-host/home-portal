@@ -13,9 +13,9 @@ pushd ./backend
 
 ./gradlew publish \
   -x jar -x sourcesJar -x assemble -x build \
-  -PmvnUri="$MVN_URI" \
-  -PmvnUsername="$MVN_USERNAME" \
-  -PmvnPassword="$MVN_PASSWORD" \
+  -P"mvnUri=$MVN_URI" \
+  -P"mvnUsername=$MVN_USERNAME" \
+  -P"mvnPassword=$MVN_PASSWORD" \
   || exit 1
 
 popd

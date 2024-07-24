@@ -31,9 +31,10 @@ node {
     echo "publish maven: ${isPublishToMaven}"
     echo "publish docker: ${isPublishToDocker}"
 
+
     checkout scm
 
-    def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
+    def buildImg = docker.image("amazoncorretto:17")
 
     projectName = null
     projectVersion = null
@@ -57,7 +58,7 @@ node {
         }
 
         stage("build") {
-            sh './scripts/jenkins/build/build.sh'
+            sh './gradlew clean build'
         }
 
         stage("publish maven") {
