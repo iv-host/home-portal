@@ -34,7 +34,7 @@ node {
 
     checkout scm
 
-    def buildImg = docker.image("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
+    def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
 
     projectName = null
     projectVersion = null
