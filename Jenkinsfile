@@ -34,7 +34,7 @@ node {
 
     checkout scm
 
-    def buildImg = docker.image("amazoncorretto:17")
+    def buildImg = docker.image("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
 
     projectName = null
     projectVersion = null
