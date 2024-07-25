@@ -24,10 +24,7 @@ public class ImageService (
 
     @Transactional
     public fun getImageData(path: String, filename: String, out: OutputStream) {
-        val data = imageDao.getData(path, filename) ?: throw NotFoundException()
-        data.use {
-            it.transferTo(out)
-        }
+        imageDao.getData(path, filename)?.use { it.transferTo(out) } ?: throw NotFoundException()
     }
 
     @Transactional

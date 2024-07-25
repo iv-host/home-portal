@@ -4,6 +4,7 @@ plugins {
 
 node {
     download = true
+    version = "18.16.0"
 }
 
 tasks {
