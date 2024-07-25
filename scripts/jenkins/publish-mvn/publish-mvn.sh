@@ -9,13 +9,9 @@ if [ -z "$MVN_PASSWORD" ]; then echo "MVN_PASSWORD not set"; exit 1; fi;
 cd $(dirname "$(realpath "$0")")
 cd ../../../
 
-pushd ./backend
-
-./gradlew publish \
+./gradlew backend:publish \
   -x jar -x sourcesJar -x assemble -x build \
   -P"mvnUri=$MVN_URI" \
   -P"mvnUsername=$MVN_USERNAME" \
   -P"mvnPassword=$MVN_PASSWORD" \
   || exit 1
-
-popd
