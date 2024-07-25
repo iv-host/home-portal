@@ -141,8 +141,6 @@ tasks.register<Copy>("dockerJar") {
     }
 }
 
-tasks.register("prepareKotlinBuildScriptModel"){}
-
 tasks.test {
     useJUnitPlatform()
 }

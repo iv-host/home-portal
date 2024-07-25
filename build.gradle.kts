@@ -5,24 +5,23 @@ allprojects {
 
 
 tasks {
+    // Info Tasks
     register("info") {
-        println("${project.name}:${project.version}")
+        doLast { println("${project.name}:${project.version}") }
     }
     register("info_version") {
-        println(project.version)
+        doLast { println(project.version)}
     }
     register("info_name") {
-        println(project.name)
+        doLast { println(project.name) }
+    }
+
+    // Build Tasks
+    register("clean") {
+        dependsOn(":frontend:clean", ":backend:clean")
+    }
+    register("build") {
+        dependsOn(":frontend:build", ":backend:build")
     }
 }
 
-
-
-tasks.register("clean") {
-    dependsOn(":frontend:clean", ":backend:clean")
-}
-
-
-tasks.register("build") {
-    dependsOn(":frontend:build", ":backend:build")
-}

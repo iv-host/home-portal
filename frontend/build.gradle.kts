@@ -19,5 +19,3 @@ tasks {
         dependsOn("npm_run_build")
     }
 }
-
-tasks.register("prepareKotlinBuildScriptModel"){}
