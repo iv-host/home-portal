@@ -23,7 +23,10 @@ COPY --from=corretto-jdk /customjre $JAVA_HOME
 
 RUN apk --no-cache add curl
 
-COPY backend/build/libs/home-portal-*.jar home-portal.jar
+RUN mkdir -p /app
+WORKDIR /app
+
+COPY backend/build/dockerJar/home-portal.jar .
 COPY scripts/jenkins/docker/entrypoint.sh entrypoint.sh
 
 HEALTHCHECK --timeout=5s --start-period=30s \

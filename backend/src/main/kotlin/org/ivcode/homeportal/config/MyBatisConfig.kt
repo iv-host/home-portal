@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration
 // --== Supported JDBC Drivers ==-- //
 private const val DRIVER_H2 = "org.h2.Driver"
 private const val DRIVER_MYSQL = "com.mysql.jdbc.Driver"
+private const val DRIVER_MYSQL_2 = "com.mysql.cj.jdbc.Driver"
 // TODO postgres
 
 @Configuration
@@ -29,6 +30,7 @@ public class MyBatisConfig {
             when(val driver = (dataSource as HikariDataSource).driverClassName) {
                 DRIVER_H2 -> "h2"
                 DRIVER_MYSQL -> "mysql"
+                DRIVER_MYSQL_2 -> "mysql"
                 else -> throw IllegalArgumentException("unsupported driver: $driver")
             }
         }

@@ -1,18 +1,14 @@
-# Build Envoirnment Container
+# Build Environment Container
 FROM ubuntu:jammy
 
 # Install System Dependencies
 RUN apt-get update \
- && apt-get install -y curl wget
+ && apt-get install -y wget gpg
 
-# Install Node
-#RUN curl -sL https://deb.nodesource.com/setup_18.x  | bash - \
-# && apt-get install -y nodejs \
-# && curl -L https://www.npmjs.com/install.sh | sh
+# Add Corretto Repo
+RUN wget -O - https://apt.corretto.aws/corretto.key | gpg --dearmor -o /usr/share/keyrings/corretto-keyring.gpg \
+  && echo "deb [signed-by=/usr/share/keyrings/corretto-keyring.gpg] https://apt.corretto.aws stable main" | tee /etc/apt/sources.list.d/corretto.list
 
-# Install Java
-RUN wget https://download.java.net/java/GA/jdk17.0.2/dfd4a8d0985749f896bed50d7138ee7f/8/GPL/openjdk-17.0.2_linux-x64_bin.tar.gz \
-  && tar -xvf openjdk-17.0.2_linux-x64_bin.tar.gz \
-  && mv ./jdk-17.0.2 /usr/local/openjdk-17
-ENV JAVA_HOME=/usr/local/openjdk-17
-ENV PATH=${JAVA_HOME}/bin:${PATH}
+# Install JDK
+RUN apt-get update \
+  && apt-get install -y java-21-amazon-corretto-jdk
