@@ -67,8 +67,10 @@ node {
                 return
             }
 
-            withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                sh "export MVN_URI=${MVN_URI_SNAPSHOT} && ./scripts/jenkins/publish-mvn/publish-mvn.sh";
+            withEnv(["MVN_URI=${MVN_URI_SNAPSHOT}"]) {
+                withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
+                    sh "./scripts/jenkins/publish-mvn/publish-mvn.sh";
+                }
             }
 
             if(!isSnapshot(projectVersion)) {
