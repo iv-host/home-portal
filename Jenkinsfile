@@ -69,7 +69,7 @@ node {
 
             withEnv(["MVN_URI=${MVN_URI_SNAPSHOT}"]) {
                 withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                    sh "./scripts/jenkins/publish-mvn/publish-mvn.sh";
+                    sh './gradlew backend:publish -x jar -x sourcesJar -x assemble -x build'
                 }
             }
 
