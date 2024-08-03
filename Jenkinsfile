@@ -60,7 +60,7 @@ node {
                 return
             }
 
-            withEnv(["MVN_URI=${MVN_URI_SNAPSHOT}"]) {
+            withEnv(["MVN_URL=${MVN_URI_SNAPSHOT}"]) {
                 withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
                     sh './gradlew publish'
                 }
