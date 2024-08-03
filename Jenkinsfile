@@ -31,7 +31,6 @@ node {
     echo "publish maven: ${isPublishToMaven}"
     echo "publish docker: ${isPublishToDocker}"
 
-
     checkout scm
 
     def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
@@ -44,17 +43,11 @@ node {
             // start the daemon
             sh './gradlew info --daemon'
 
-            projectName = sh (
-                script: './gradlew info_name -q',
-                returnStdout: true
-            ).trim()
+            projectName = sh (script: './gradlew info_name -q', returnStdout: true).trim()
+            projectVersion = sh (script: './gradlew info_version -q', returnStdout: true).trim()
 
-            projectVersion = sh (
-               script: './gradlew info_version -q',
-               returnStdout: true
-            ).trim()
-
-            echo "${projectName}:${projectVersion}"
+            echo "Project Name: ${projectName}"
+            echo "Project Version: ${projectVersion}"
         }
 
         stage("build") {
@@ -69,7 +62,7 @@ node {
 
             withEnv(["MVN_URI=${MVN_URI_SNAPSHOT}"]) {
                 withCredentials([usernamePassword(credentialsId: 'mvn-snapshot', usernameVariable: 'MVN_USERNAME', passwordVariable: 'MVN_PASSWORD')]) {
-                    sh './gradlew backend:publish -x jar -x sourcesJar -x assemble -x build'
+                    sh './gradlew publish'
                 }
             }
 

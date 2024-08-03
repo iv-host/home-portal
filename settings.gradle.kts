@@ -1,10 +1,10 @@
 pluginManagement {
     repositories {
-        mavenLocal()
+        maven { url = uri("https://mvn.ivcode.org/mvn/snapshot") }
         mavenCentral()
         gradlePluginPortal()
-        maven("https://mvn.ivcode.org/snapshots")
     }
+
 }
 
 rootProject.name = "home-portal"

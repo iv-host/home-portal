@@ -23,5 +23,8 @@ tasks {
     register("build") {
         dependsOn(":frontend:build", ":backend:build")
     }
+    register("publish") {
+        dependsOn(":backend:publish")
+    }
 }
 
