@@ -55,7 +55,6 @@ tasks.getByName<Jar>("jar") {
     enabled = false
 }
 
-
 val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "frontend")
 val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
 val publicDirectory = File(resourcesDirectory, "main/public")
@@ -115,4 +114,11 @@ kotlin {
 
 application {
     mainClass.set("org.ivcode.homeportal.MainKt")
+}
+
+
+publish {
+    groupId = "${project.group}"
+    artifactId = rootProject.name
+    version = "${project.version}"
 }
