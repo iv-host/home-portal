@@ -12,7 +12,7 @@ tasks {
         doLast {
             mkdir("./build")
 
-            FileWriter ("build/build.properties").use {
+            FileWriter ("./build/build.properties").use {
                 println("name=${project.name}")
                 it.write("name=${project.name}\n")
 
@@ -23,17 +23,6 @@ tasks {
                 it.write("version=${project.version}\n")
             }
         }
-    }
-
-    // Info Tasks
-    register("info") {
-        doLast { println("${project.name}:${project.version}") }
-    }
-    register("info_version") {
-        doLast { println(project.version)}
-    }
-    register("info_name") {
-        doLast { println(project.name) }
     }
 
     // Build Tasks

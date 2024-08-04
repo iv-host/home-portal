@@ -33,8 +33,7 @@ node {
 
     checkout scm
 
-    def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
-
+    def buildImg = docker.image("registry.ivcode.org/corretto-ubuntu:21-jammy")
     def props = null
 
     buildImg.inside {
@@ -71,8 +70,10 @@ node {
         }
     }
 
+    def docker = null
+
     stage("build docker") {
-        docker.build("${props.name}:${props.version}", "--file ./scripts/jenkins/docker/Dockerfile .")
+        docker = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
     }
 
     stage("publish docker") {
@@ -82,9 +83,8 @@ node {
         }
 
         docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-            def image = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
-            image.push(props.version)
-            image.push("latest")
+            docker.push(props.version)
+            docker.push("latest")
         }
 
         if(!isSnapshot(props.version)) {
