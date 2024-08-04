@@ -10,6 +10,8 @@ tasks {
 
     register("buildProperties") {
         doLast {
+            mkdir("./build")
+
             FileWriter ("build/build.properties").use {
                 println("name=${project.name}")
                 it.write("name=${project.name}\n")
@@ -37,6 +39,7 @@ tasks {
     // Build Tasks
     register("clean") {
         dependsOn(":frontend:clean", ":backend:clean")
+        File("./build").deleteRecursively()
     }
     register("build") {
         dependsOn(":frontend:build", ":backend:build")
