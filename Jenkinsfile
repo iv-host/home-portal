@@ -35,19 +35,18 @@ node {
 
     def buildImg = docker.build("home-portal-build:latest", "./scripts/jenkins/build-in-docker")
 
-    projectName = null
-    projectVersion = null
+    def props = null
 
     buildImg.inside {
         stage("prepare") {
             // start the daemon
-            sh './gradlew info --daemon'
+            sh './gradlew buildProperties --daemon'
 
-            projectName = sh (script: './gradlew info_name -q', returnStdout: true).trim()
-            projectVersion = sh (script: './gradlew info_version -q', returnStdout: true).trim()
+            // load the properties
+            props = readProperties defaults: d, file: 'build/build.properties'
 
-            echo "Project Name: ${projectName}"
-            echo "Project Version: ${projectVersion}"
+            echo "Project Name: ${props.name}"
+            echo "Project Version: ${props.version}"
         }
 
         stage("build") {
@@ -73,7 +72,7 @@ node {
     }
 
     stage("build docker") {
-        docker.build("${projectName}:${projectVersion}", "--file ./scripts/jenkins/docker/Dockerfile .")
+        docker.build("${props.name}:${props.version}", "--file ./scripts/jenkins/docker/Dockerfile .")
     }
 
     stage("publish docker") {
@@ -83,12 +82,12 @@ node {
         }
 
         docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-            def image = docker.build("${projectName}", "--file ./scripts/jenkins/docker/Dockerfile .")
-            image.push(projectVersion)
+            def image = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
+            image.push(props.version)
             image.push("latest")
         }
 
-        if(!isSnapshot(projectVersion)) {
+        if(!isSnapshot(props.version)) {
             throw new UnsupportedOperationException("release process not yet defined")
         }
     }
