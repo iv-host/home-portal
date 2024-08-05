@@ -64,14 +64,13 @@ node {
                 }
             }
 
-            if(!isSnapshot(projectVersion)) {
+            if(!isSnapshot(props.version)) {
                 throw new UnsupportedOperationException("release process not yet defined")
             }
         }
     }
 
     def docker = null
-
     stage("build docker") {
         docker = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
     }
