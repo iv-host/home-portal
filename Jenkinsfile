@@ -70,9 +70,9 @@ node {
         }
     }
 
-    def docker = null
+    def dockerBuildImage = null
     stage("build docker") {
-        docker = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
+        dockerBuildImage = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
     }
 
     stage("publish docker") {
@@ -82,8 +82,8 @@ node {
         }
 
         docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-            docker.push(props.version)
-            docker.push("latest")
+            dockerBuildImage.push(props.version)
+            dockerBuildImage.push("latest")
         }
 
         if(!isSnapshot(props.version)) {
