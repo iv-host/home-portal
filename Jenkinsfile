@@ -42,7 +42,7 @@ node {
             sh './gradlew info --daemon'
 
             // load the properties
-            props = readProperties file: 'build/build.properties'
+            props = readProperties file: 'build/properties/build.properties'
 
             echo "Project Name: ${props.name}"
             echo "Project Version: ${props.version}"
