@@ -1,4 +1,6 @@
-import java.io.FileWriter
+plugins {
+    id("org.ivcode.gradle-info") version "0.1-SNAPSHOT"
+}
 
 allprojects {
     group = "org.ivcode"
@@ -7,24 +9,6 @@ allprojects {
 
 
 tasks {
-
-    register("buildProperties") {
-        doLast {
-            mkdir("./build")
-
-            FileWriter ("./build/build.properties").use {
-                println("name=${project.name}")
-                it.write("name=${project.name}\n")
-
-                println("group=${project.group}")
-                it.write("group=${project.group}\n")
-
-                println("version=${project.version}")
-                it.write("version=${project.version}\n")
-            }
-        }
-    }
-
     // Build Tasks
     register("clean") {
         dependsOn(":frontend:clean", ":backend:clean")

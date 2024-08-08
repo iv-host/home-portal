@@ -39,7 +39,7 @@ node {
     buildImg.inside {
         stage("prepare") {
             // start the daemon
-            sh './gradlew buildProperties --daemon'
+            sh './gradlew info --daemon'
 
             // load the properties
             props = readProperties file: 'build/build.properties'
