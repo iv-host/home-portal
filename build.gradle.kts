@@ -9,7 +9,7 @@ allprojects {
 
 
 tasks {
-    // Build Tasks
+    // --== Build Tasks ==--
     register("clean") {
         dependsOn(":frontend:clean", ":backend:clean")
         File("./build").deleteRecursively()
@@ -20,5 +20,22 @@ tasks {
     register("publish") {
         dependsOn(":backend:publish")
     }
-}
 
+    // --== Docker Tasks ==--
+    // Start the dev environment
+    register("dev-up", Exec::class) {
+        workingDir = File(projectDir, "scripts${File.separator}dev")
+        if(!workingDir.exists()) {
+            throw GradleException("Directory does not exist: ${workingDir.absolutePath}")
+        }
+        commandLine("docker", "compose", "up", "-d")
+    }
+    // Stop the dev environment
+    register("dev-down", Exec::class) {
+        workingDir = File(projectDir, "scripts${File.separator}dev")
+        if(!workingDir.exists()) {
+            throw GradleException("Directory does not exist: ${workingDir.absolutePath}")
+        }
+        commandLine("docker", "compose", "down")
+    }
+}

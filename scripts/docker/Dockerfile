@@ -27,7 +27,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 COPY backend/build/dockerJar/home-portal.jar .
-COPY scripts/jenkins/docker/entrypoint.sh entrypoint.sh
+COPY scripts/docker/entrypoint.sh entrypoint.sh
 
 HEALTHCHECK --timeout=5s --start-period=30s \
   CMD curl -f http://localhost:8080/health-check || exit 1

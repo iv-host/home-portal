@@ -72,7 +72,7 @@ node {
 
     def dockerBuildImage = null
     stage("build docker") {
-        dockerBuildImage = docker.build(props.name, "--file ./scripts/jenkins/docker/Dockerfile .")
+        dockerBuildImage = docker.build(props.name, "--file ./scripts/docker/Dockerfile .")
     }
 
     stage("publish docker") {

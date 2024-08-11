@@ -165,7 +165,7 @@ export const BackgroundsTab = (props: BackgroundsTabProps) => {
 
   React.useEffect(()=> {
     loadBackgrounds()
-  })
+  }, [])
 
   const imgWidth = 160
   const imgHeight = (9.0/16) * imgWidth

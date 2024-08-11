@@ -83,10 +83,10 @@ function App() {
         onSelectBackground={setBackground}
         onError={setError} />
       <LinkContainer ref={linkContainerRef} style={{
-        backgroundImage: background ? `url(${service.host + background.url})` : "unset"
+        backgroundImage: background ? `url(${background.url})` : "unset"
       }}>
           {links!.map(function(link, i) {
-            return <LinkCard key={link.href} name={link.name} href={link.href} icon={link.icon ? service.host+link.icon : undefined}/>
+            return <LinkCard key={link.href} name={link.name} href={link.href} icon={link.icon}/>
           })}
       </LinkContainer>
     </div>}

@@ -231,7 +231,7 @@ export const LinkTab = (props: LinkTabProps) => {
 
   React.useEffect(() => {
     load()
-  })
+  }, [])
 
   React.useEffect(() => {
     setRows(createRowArray(links))
@@ -277,6 +277,7 @@ export const LinkTab = (props: LinkTabProps) => {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+
 
   const visibleRows = React.useMemo(
     () => stableSort(rows, getComparator(order, orderBy)),

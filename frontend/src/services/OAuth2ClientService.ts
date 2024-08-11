@@ -1,10 +1,11 @@
 import { jwtDecode } from "jwt-decode";
 import { expireCookie, parseCookies } from "../utils/CookieUtils";
 import { ServiceResponse, createLoginResponse } from "./ServiceResponse";
+import {getConfig} from "../config/config";
 
 const ACCESS_TOKEN_COOKIE = "access-token"
 const REFRESH_TOKEN_COOKIE = "refresh-token"
-const LATENCY_EXPIRATION_BUFFER = 5 // seconds given for latency and/or systemu
+const LATENCY_EXPIRATION_BUFFER = 5 // seconds given for latency and/or system
 
 const LOGIN_PATH = "/oauth2/login"
 const REFRESH_PATH = "/oauth2/refresh"
@@ -23,8 +24,12 @@ interface OAuth2TokenResponse {
 class OAuth2ClientServiceImpl {
 
   refreshSync: Promise<any> | undefined
+  host: string
 
   constructor() {
+    const { service } = getConfig();
+    this.host = service.host;
+
     const cookies = parseCookies()
     const accessToken = cookies[ACCESS_TOKEN_COOKIE]
     if (accessToken) {
@@ -81,7 +86,7 @@ class OAuth2ClientServiceImpl {
 
   private async doRefresh() {
 
-    const response = await fetch(`${REFRESH_PATH}?refresh_token=${this.getRefreshToken()}`, {
+    const response = await fetch(`${this.host}${REFRESH_PATH}?refresh_token=${this.getRefreshToken()}`, {
       method: 'GET'
     })
 
@@ -117,7 +122,7 @@ class OAuth2ClientServiceImpl {
   }
 
   private login() {
-    window.location.href = LOGIN_PATH
+    window.location.href = `${this.host}${LOGIN_PATH}`
   }
 
   private isExpired(token: string | undefined): boolean {
@@ -146,6 +151,6 @@ class OAuth2ClientServiceImpl {
       return false
     }
   }
-};
+}
 
 export const OAuth2ClientService = new OAuth2ClientServiceImpl()
