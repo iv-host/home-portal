@@ -211,6 +211,7 @@ export const TextFieldWrapper = (props: TextFieldWrapperProps) => {
 }
 
 export const LinkTab = (props: LinkTabProps) => {
+  const { onError } = props
   const [links, setLinks] = React.useState<Link[]>([]);
   const [rows, setRows] = React.useState<Row[]>([]);
   const [order, setOrder] = React.useState<Order>('asc');
@@ -222,16 +223,18 @@ export const LinkTab = (props: LinkTabProps) => {
 
   const [createLinkDialog_open, setCreateLinkDialog_open] = React.useState(false);
 
-  const load = () => request(LinkService.getLinks(), 
-    links => {    
-      setLinks(links!)
-      setRows(createRowArray(links!))
-    },
-    msg => props.onError ? props.onError(msg) : nop())
+  const load = React.useCallback(async () => {
+    await request(LinkService.getLinks(),
+        links => {
+          setLinks(links!)
+          setRows(createRowArray(links!))
+        },
+        msg => onError ? onError(msg) : nop())
+  }, [onError]);
 
   React.useEffect(() => {
-    load()
-  }, [])
+    load().catch(e => console.error(e))
+  }, [load])
 
   React.useEffect(() => {
     setRows(createRowArray(links))

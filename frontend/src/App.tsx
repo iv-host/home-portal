@@ -2,7 +2,6 @@ import { createRef, useEffect, useState } from 'react';
 import './App.css';
 import { LINK_CARD_OFFSET_WIDTH, LinkCard } from './link/LinkCard';
 import { Link, BackgroundImage, LinkService, UserInfo } from './services/LinksService';
-import { getConfig } from "./config/config";
 import SearchAppBar from './SearchAppBar';
 import Alert from '@mui/material/Alert';
 import { request } from './services/ServiceResponse';
@@ -36,8 +35,6 @@ function App() {
 
   const linkContainerRef = createRef<HTMLDivElement>()
 
-  const { service } = getConfig()
-
   const loadUserInfo = () => request(LinkService.getUserInfo(),
     (userInfo) => setUserInfo(userInfo),
     (msg) => setError(msg));
@@ -53,9 +50,9 @@ function App() {
     (msg) => setError(msg));
 
   useEffect(() => {
-    loadUserInfo()
-    loadBackground()
-    loadLinks()
+    loadUserInfo().catch(e => setError("Error loading user info"))
+    loadBackground().catch(e => setError("Error loading background"))
+    loadLinks().catch(e => setError("Error loading links"))
   }, [])
 
   const isReady = ():boolean => {
