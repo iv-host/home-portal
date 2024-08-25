@@ -1,7 +1,7 @@
 {
   "development": {
     "service": {
-      "host": "",
+      "host": "http://localhost:8080",
       "path": "/api"
     }
   },

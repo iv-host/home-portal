@@ -27,6 +27,9 @@ security:
       client-secret: EYm1bCnTp35MN8Phqe7hB97gj3zPwIwJ
       scope: ~
 
+    # Comma separated list of allowed referrers.
+    referrers: http://localhost:3000
+
 springdoc:
   api-docs:
     resolve-schema-properties: true

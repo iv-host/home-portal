@@ -35,10 +35,13 @@ public class OAuth2ClientController(
     @GetMapping(PATH_OAUTH2_LOGIN)
     public fun login(
         request: HttpServletRequest
-    ): ResponseEntity<Void> = ResponseEntity
-        .status(HttpStatus.MOVED_PERMANENTLY)
-        .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request)).toString())
-        .build()
+    ): ResponseEntity<Void> {
+        val referer = getRefererHeader(request)
+        return ResponseEntity
+            .status(HttpStatus.MOVED_PERMANENTLY)
+            .header(HttpHeaders.LOCATION, oAuthClientService.authUrl(getRequestHost(request), referer).toString())
+            .build()
+    }
 
     /**
      * After the user logs is authorized, they will be redirected to here. New tokens are requested and
@@ -50,7 +53,9 @@ public class OAuth2ClientController(
         request: HttpServletRequest
     ) : ResponseEntity<Void> {
         val hostUri =  getRequestHost(request)
-        val redirectUri = oAuthClientService.redirectUrl(hostUri).toString()
+
+        val referer = getRefererProperty(request)
+        val redirectUri = oAuthClientService.redirectUrl(hostUri, referer).toString()
         val tokenResponse = oAuthClientService.token(code, redirectUri)
 
         val accessTokenCookie: HttpCookie = ResponseCookie
@@ -65,7 +70,7 @@ public class OAuth2ClientController(
 
         return ResponseEntity
             .status(HttpStatus.MOVED_PERMANENTLY)
-            .header(HttpHeaders.LOCATION, hostUri.toString())
+            .header(HttpHeaders.LOCATION, referer ?: hostUri.toString())
             .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
             .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
             .build()
@@ -83,5 +88,22 @@ public class OAuth2ClientController(
         request: HttpServletRequest
     ): URI = URIBuilder(request.requestURL.toString()).apply {
         path = ""
+        clearParameters()
     }.build()
+
+    private fun getRefererHeader(request: HttpServletRequest): String? = request.getHeader(HttpHeaders.REFERER).let {
+        if(it != null && oAuthClientService.isValidReferer(it)) {
+            it
+        } else {
+            null
+        }
+    }
+
+    private fun getRefererProperty(request: HttpServletRequest): String? = request.getParameter("referer").let {
+        if(it != null && oAuthClientService.isValidReferer(it)) {
+            it
+        } else {
+            null
+        }
+    }
 }

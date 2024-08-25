@@ -108,14 +108,18 @@ export interface BackgroundsTabProps {
 }
 
 export const BackgroundsTab = (props: BackgroundsTabProps) => {
+  const { onError } = props
   const [backgrounds, setBackgrounds] = React.useState<BackgroundImage[]>()
   const [deleteDialogProps, setDeleteDialogProps] = React.useState<DeleteDialogProps<{bg: BackgroundImage, index: number}>>({
     open: false
   })
 
-  const loadBackgrounds = () => request(LinkService.getBackgrounds(),
-    bgs => setBackgrounds(bgs),
-    msg => props.onError ? props.onError(msg) : {})
+  const loadBackgrounds = React.useCallback(() => {
+    return request(LinkService.getBackgrounds(),
+        bgs => setBackgrounds(bgs),
+        msg => onError ? onError(msg) : nop()
+    );
+  }, [onError]);
 
   const compare = (bg1: BackgroundImage, bg2: BackgroundImage | undefined) => {
     return bg2 !== undefined
@@ -164,8 +168,8 @@ export const BackgroundsTab = (props: BackgroundsTabProps) => {
   }
 
   React.useEffect(()=> {
-    loadBackgrounds()
-  })
+    loadBackgrounds().catch(e=>console.error(e))
+  }, [loadBackgrounds])
 
   const imgWidth = 160
   const imgHeight = (9.0/16) * imgWidth

@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import { LinkService } from '../services/LinksService';
 import { request } from '../services/ServiceResponse';
 import { nop } from '../utils/FunctionUtils';
+import {getConfig} from "../config/config";
 
 const ItemDiv = styled.div`
   display: flex;
@@ -40,6 +41,8 @@ export interface InfoTabProps {
 
 export const InfoTab = (props: InfoTabProps) => {
   const [version, setVersion] = React.useState<string>()
+  const { service } = getConfig()
+  const swaggerUrl = `${service.host}/swagger-ui/index.html`
   
   React.useEffect(() => {
     request(LinkService.getVersion(),
@@ -48,13 +51,12 @@ export const InfoTab = (props: InfoTabProps) => {
     )
   })
 
-
   return <UnorderedList>
     <li>
       <Item icon={<InfoIcon/>}>Build: {version}</Item>
     </li>
     <li>
-      <Item icon={<ApiIcon/>}>Open Api: <a target='blank' href='/swagger-ui/index.html'>/swagger-ui/index.html</a></Item>
+      <Item icon={<ApiIcon/>}>Open Api: <a target='blank' href={swaggerUrl}>{swaggerUrl}</a></Item>
     </li>
   </UnorderedList>
 }
