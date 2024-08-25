@@ -1,4 +1,4 @@
-@Library("iv-jenkins@isaiah/appbuild") _
+@Library("iv-jenkins") _
 
 ApplicationBuild ([
     "publishMaven": true,
