@@ -29,5 +29,3 @@ logging:
     httpclient.wire: DEBUG
     org.springframework: WARN
     org.ivcode: DEBUG
-
-  file: logs/spring-boot-logging.log

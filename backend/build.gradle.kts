@@ -45,6 +45,7 @@ dependencies {
     implementation("com.mysql:mysql-connector-j:8.2.0")
     implementation("com.h2database:h2:2.2.224")
 
+    implementation(project(":frontend"))
 
     // Test
     testImplementation(kotlin("test"))
@@ -59,26 +60,14 @@ val frontendDirectory = File(layout.projectDirectory.asFile.parentFile, "fronten
 val resourcesDirectory = layout.buildDirectory.dir("resources").get().asFile
 val publicDirectory = File(resourcesDirectory, "main/public")
 
-// Update task chain to include new tasks
-tasks.named("test").configure{ dependsOn("copy-frontend") }
-tasks.named("test").configure{ dependsOn("write-version") }
-tasks.named("bootJar").configure{ dependsOn("copy-frontend") }
-tasks.named("bootJar").configure{ dependsOn("write-version") }
-tasks.named("resolveMainClassName").configure{ dependsOn("copy-frontend") }
-tasks.named("resolveMainClassName").configure{ dependsOn("write-version") }
-
-// Copy frontend to the build's /resources/public
-tasks.register<Copy>("copy-frontend") {
-    dependsOn(":frontend:build",":backend:processResources")
-    from(file(File(frontendDirectory,"build").absolutePath))
-    into(publicDirectory.absolutePath)
-}
-
 // Write version to the build's /resources
+tasks.named("processResources").configure{ dependsOn("write-version") }
 tasks.register("write-version") {
-    dependsOn(":backend:processResources")
     doLast {
-        File(resourcesDirectory, "main/version.txt").writeText(text = version as String)
+        File(resourcesDirectory, "main/version.txt").apply {
+            parentFile.mkdirs()
+            writeText(text = version as String)
+        }
     }
 }
 
