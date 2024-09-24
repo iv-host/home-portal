@@ -21,9 +21,6 @@ node {
 
 // Creates packages the ui such that it'll be picked up by the backend and served as static resources
 www {
-    // A unique identifier for the frontend build that'll be picked up by the component scanner in the backend
-    packageName = "org.ivcode.homeportal.ui"
-
     // The directory containing the resources to be packaged
     resources   = "${projectDir}/build"
 }
