@@ -3,7 +3,7 @@ import noimage from './noimage.png'
 import { styled } from '@mui/material/styles';
 
 const LINK_CARD_WIDTH_PX = 100
-const LINK_CARD_BORDER_WIDTH_PX = 3
+const LINK_CARD_BORDER_WIDTH_PX = 1
 const LINK_CARD_MARGIN_PX = 20
 
 export const LINK_CARD_OFFSET_WIDTH = LINK_CARD_WIDTH_PX + 2*LINK_CARD_BORDER_WIDTH_PX + 2*LINK_CARD_MARGIN_PX
@@ -18,7 +18,7 @@ const LinkCardAnchor = styled('a')(({ theme }) => ({
   paddingTop: "20px",
   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
   margin: `${LINK_CARD_MARGIN_PX}px`,
-  backdropFilter: "blur(10px)",
+  backdropFilter: "blur(10px) brightness(0.55)",
   userSelect: "none",
   textDecoration: "none",
 
