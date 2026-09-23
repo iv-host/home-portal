@@ -4,6 +4,15 @@ A portal to your self-hosted applications. Simply put, it's an application of li
 ## demo
 <sup>Required: `docker`</sup>
 
+Build the application JAR and local Docker image from the repository root:
+
+```bash
+./gradlew.bat :backend:dockerJar
+docker build --file scripts/docker/Dockerfile --tag home-portal:local .
+```
+
+Run the local image:
+
 ```bash
 docker run \
  --rm \
@@ -13,6 +22,5 @@ docker run \
  --env DATABASE_PASSWORD=password \
  --publish 8080:8080 \
  --name home-portal-demo \
- registry.ivcode.org/home-portal
+ home-portal:local
 ```
-

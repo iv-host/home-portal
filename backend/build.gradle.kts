@@ -104,10 +104,3 @@ kotlin {
 application {
     mainClass.set("org.ivcode.homeportal.MainKt")
 }
-
-
-publish {
-    groupId = "${project.group}"
-    artifactId = rootProject.name
-    version = "${project.version}"
-}
