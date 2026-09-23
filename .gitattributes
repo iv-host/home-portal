@@ -1,2 +1,2 @@
 *.sh text=auto eol=lf
-backend/gradlew text=auto eol=lf
+gradlew text=auto eol=lf
