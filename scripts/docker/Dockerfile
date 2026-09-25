@@ -1,5 +1,5 @@
 # base image to build a JRE
-FROM amazoncorretto:21-alpine as corretto-jdk
+FROM amazoncorretto:21-alpine AS corretto-jdk
 
 # required for strip-debug to work
 RUN apk add --no-cache binutils
@@ -28,6 +28,10 @@ WORKDIR /app
 
 COPY backend/build/dockerJar/home-portal.jar .
 COPY scripts/docker/entrypoint.sh entrypoint.sh
+COPY scripts/docker/home-portal /usr/local/bin/home-portal
+
+RUN sed -i 's/\r$//' /usr/local/bin/home-portal \
+  && chmod +x /usr/local/bin/home-portal
 
 HEALTHCHECK --timeout=5s --start-period=30s \
   CMD curl -f http://localhost:8080/health-check || exit 1
