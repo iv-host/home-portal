@@ -43,6 +43,7 @@ dependencies {
 
     // DB Drivers
     implementation("com.mysql:mysql-connector-j:8.2.0")
+    implementation("org.postgresql:postgresql:42.7.1")
     implementation("com.h2database:h2:2.2.224")
 
     implementation(project(":frontend"))

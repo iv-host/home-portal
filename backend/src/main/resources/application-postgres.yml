@@ -1,0 +1,31 @@
+server:
+  forward-headers-strategy: FRAMEWORK
+
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:/database/db.changelog-root.yml
+
+  servlet.multipart:
+    max-file-size: 100MB
+    max-request-size: 100MB
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/home
+    username: home
+    password: password
+
+security.oauth2.enabled: false
+
+springdoc:
+  api-docs:
+    resolve-schema-properties: true
+  writer-with-order-by-keys: true
+
+
+
+logging:
+  level:
+    httpclient.wire: DEBUG
+    org.springframework: WARN
+    org.ivcode: DEBUG

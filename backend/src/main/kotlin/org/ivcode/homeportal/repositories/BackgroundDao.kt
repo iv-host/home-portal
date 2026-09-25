@@ -25,6 +25,10 @@ private const val DELETE_BACKGROUND_IMAGE = """
     WHERE EXISTS (SELECT 1 FROM image WHERE background.image_id=image.id AND image.filename=#{filename});
 """
 
+private const val DELETE_ALL_BACKGROUNDS = """
+    DELETE FROM background
+"""
+
 @Mapper
 public interface BackgroundDao {
 
@@ -42,4 +46,8 @@ public interface BackgroundDao {
 
     @Delete(DELETE_BACKGROUND_IMAGE)
     public fun deleteBackgroundImage(filename: String): Int
+
+    /** Deletes every row in the background table. Used to reset state before restoring a backup. */
+    @Delete(DELETE_ALL_BACKGROUNDS)
+    public fun deleteAllBackgrounds(): Int
 }

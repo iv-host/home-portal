@@ -38,6 +38,10 @@ private const val DELETE_IMAGES_BY_ID = """<script>
         </foreach>
 </script>"""
 
+private const val DELETE_ALL_IMAGES = """
+    DELETE FROM image
+"""
+
 @Mapper
 public interface ImageDao {
 
@@ -56,4 +60,8 @@ public interface ImageDao {
 
     @Delete(DELETE_IMAGES_BY_ID)
     public fun deleteImagesById(imageIds: List<Long>): Int
+
+    /** Deletes every row in the image table. Used to reset state before restoring a backup. */
+    @Delete(DELETE_ALL_IMAGES)
+    public fun deleteAllImages(): Int
 }

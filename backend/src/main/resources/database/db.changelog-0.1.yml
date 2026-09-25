@@ -1,9 +1,22 @@
 databaseChangeLog:
+  - property:
+      name: blobType
+      value: blob
+      dbms: h2
+  - property:
+      name: blobType
+      value: longblob
+      dbms: mysql
+  - property:
+      name: blobType
+      value: bytea
+      dbms: postgresql
 
   # Image Table
   - changeSet:
       id: 0.1.1
       author: isaiahv
+      validCheckSum: ANY
       changes:
         - createTable:
             tableName: image
@@ -32,7 +45,7 @@ databaseChangeLog:
                     - nullable: false
               - column:
                   name: data
-                  type: longblob
+                  type: ${blobType}
                   constraints:
                     - nullable: false
         - addUniqueConstraint:
@@ -191,11 +204,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg'
       rollback:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-photo-of-pretty-purple-flowers.jpg')
 
   # Demo Background Image #2
@@ -204,11 +217,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: INSERT INTO background (image_id) SELECT id FROM image WHERE path='/bg' AND filename='macro-snowflake.jpg'
       rollback:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM background WHERE EXISTS (SELECT * FROM image WHERE background.image_id = image.id AND path='/bg' AND filename='macro-snowflake.jpg')
 
   # Demo Link Google
@@ -217,11 +230,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Google' AS name, 'https://www.google.com/' FROM image WHERE path='/link/Google' AND filename='google.png'
       rollback:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM link WHERE name='Google'
   
   # Demo Link Yahoo
@@ -230,11 +243,11 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Yahoo' AS name, 'https://www.yahoo.com/' FROM image WHERE path='/link/Yahoo' AND filename='yahoo.png'
       rollback:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM link WHERE name='Yahoo'
 
   # Demo Link Bing
@@ -243,9 +256,9 @@ databaseChangeLog:
       author: isaiahv
       changes:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: INSERT INTO link (image_id, name, href) SELECT id, 'Bing' AS name, 'https://www.bing.com/' FROM image WHERE path='/link/Bing' AND filename='bing.png'
       rollback:
         - sql:
-            dbms:  'h2, mysql'
+            dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM link WHERE name='Bing'

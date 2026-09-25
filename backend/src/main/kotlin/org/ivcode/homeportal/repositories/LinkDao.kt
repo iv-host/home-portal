@@ -21,6 +21,10 @@ private const val DELETE_LINKS_BY_ID = """<script>
         </foreach>
 </script>"""
 
+private const val DELETE_ALL_LINKS = """
+    DELETE FROM link
+"""
+
 private const val SELECT_LINK_ICONS = """
     SELECT
         link.id as link_id,
@@ -108,4 +112,8 @@ public interface LinkDao {
 
     @Delete(DELETE_LINKS_BY_ID)
     public fun deleteLinksById(linkIds: List<Long>): Int
+
+    /** Deletes every row in the link table. Used to reset state before restoring a backup. */
+    @Delete(DELETE_ALL_LINKS)
+    public fun deleteAllLinks(): Int
 }
