@@ -36,15 +36,18 @@ public class LinkController(
         @RequestParam("icon") multipartFile: MultipartFile? = null,
         @RequestParam("roles", required = false) roles: List<String> = emptyList(),
     ): Link {
+        val icon = multipartFile?.takeIf { !it.isEmpty && !it.originalFilename.isNullOrBlank() }?.let {
+            CreateImageRequest(
+                filename = it.originalFilename!!,
+                mime = it.contentType ?: "application/octet-stream",
+                data = it.inputStream
+            )
+        }
         val request = CreateLinkRequest(
             name = name,
             href = href,
             roles = roles,
-            icon = if(multipartFile==null) null else CreateImageRequest (
-                filename = multipartFile.originalFilename!!,
-                mime = multipartFile.contentType!!,
-                data = multipartFile.inputStream
-            )
+            icon = icon
         )
 
         return linkService.createLink(request)
@@ -59,15 +62,18 @@ public class LinkController(
         @RequestParam("icon", required = false) multipartFile: MultipartFile? = null,
         @RequestParam("roles", required = false) roles: List<String> = emptyList(),
     ): Link {
+        val icon = multipartFile?.takeIf { !it.isEmpty && !it.originalFilename.isNullOrBlank() }?.let {
+            CreateImageRequest(
+                filename = it.originalFilename!!,
+                mime = it.contentType ?: "application/octet-stream",
+                data = it.inputStream
+            )
+        }
         val request = UpdateLinkRequest(
             name = name,
             href = href,
             roles = roles,
-            icon = if (multipartFile == null) null else CreateImageRequest(
-                filename = multipartFile.originalFilename!!,
-                mime = multipartFile.contentType!!,
-                data = multipartFile.inputStream
-            )
+            icon = icon
         )
 
         return linkService.updateLink(oldName, request)

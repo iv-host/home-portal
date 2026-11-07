@@ -73,7 +73,7 @@ public class LinkService (
 
         val roles = request.roles.map(String::trim).filter(String::isNotEmpty).distinct()
         val existingImage = existing.image
-        var imageId = existingLink.imageId
+        var imageId = existingImage?.id ?: existingLink.imageId
         var iconPath = existingImage?.toImagePath()
 
         if (request.icon != null) {

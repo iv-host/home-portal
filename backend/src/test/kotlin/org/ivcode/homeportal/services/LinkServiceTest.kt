@@ -42,7 +42,7 @@ class LinkServiceTest {
         val linkDao = Mockito.mock(LinkDao::class.java)
         val image = ImageMetaEntity(id = 5, path = "/link/Original", filename = "icon.png", mime = "image/png")
         val existing = LinkIconEntity(
-            link = LinkEntity(id = 1, imageId = 5, name = "Original", href = "https://example.com/old"),
+            link = LinkEntity(id = 1, name = "Original", href = "https://example.com/old"),
             image = image,
         )
         val updatedEntity = LinkEntity(
