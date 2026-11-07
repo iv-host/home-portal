@@ -6,8 +6,7 @@
 #   docker build --tag home-portal-build --file scripts/build/Dockerfile scripts/build
 #   docker run --rm \
 #     --volume "${PWD}:/workspace" \
-#     --volume home-portal-gradle-cache:/root/.gradle \
-#     --workdir /workspace \
+#   --workdir /workspace \
 #     home-portal-build \
 #     ./gradlew :backend:dockerJar --no-daemon
 #

@@ -23,23 +23,12 @@ No local JDK/Node installation required. This builds a throwaway image containin
 Node 18, then runs the Gradle build inside a container with the repository mounted as a volume.
 
 ```bash
-docker build --tag home-portal-build --file scripts/build/Dockerfile scripts/build
-docker volume create home-portal-gradle-cache
-docker run --rm \
- --volume "${PWD}:/workspace" \
- --volume home-portal-gradle-cache:/root/.gradle \
- --workdir /workspace \
- home-portal-build \
- sh ./gradlew :backend:dockerJar --no-daemon
+sh scripts/build/build-image.sh
 ```
 
-### Build the Docker image
-
-Once the JAR has been built (via either option above), build the application's Docker image:
-
-```bash
-docker build --file scripts/docker/Dockerfile --tag home-portal:local .
-```
+The script builds the app JAR in Docker and then creates the `home-portal:local` image.
+Pass an alternate image tag as the first argument if desired, for example
+`sh scripts/build/build-image.sh registry.example/home-portal:latest`.
 
 ## demo
 

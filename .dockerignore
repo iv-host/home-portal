@@ -1,5 +1,10 @@
 .git
 .gradle
 **/build
+!backend/build/
+backend/build/*
+!backend/build/dockerJar/
+backend/build/dockerJar/*
+!backend/build/dockerJar/home-portal.jar
 **/build-jar
 **/node_modules
