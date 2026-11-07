@@ -262,3 +262,31 @@ databaseChangeLog:
         - sql:
             dbms:  'h2, mysql, postgresql'
             sql: DELETE FROM link WHERE name='Bing'
+
+  # Link Roles
+  - changeSet:
+      id: 0.1.10
+      author: isaiahv
+      changes:
+        - createTable:
+            tableName: link_role
+            columns:
+              - column:
+                  name: link_id
+                  type: bigint
+                  constraints:
+                    - nullable: false
+                    - primaryKey: true
+              - column:
+                  name: role_name
+                  type: varchar(255)
+                  constraints:
+                    - nullable: false
+                    - primaryKey: true
+        - addForeignKeyConstraint:
+            constraintName: fk_link_role_link
+            baseTableName: link_role
+            baseColumnNames: link_id
+            referencedTableName: link
+            referencedColumnNames: id
+            onDelete: CASCADE

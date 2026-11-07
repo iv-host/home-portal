@@ -1,6 +1,6 @@
 package org.ivcode.homeportal.config
 
-import org.ivcode.homeportal.utils.claimquery.JwtClaimQuery
+import org.ivcode.homeportal.utils.realmRoles
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtDecoders
+import org.springframework.security.oauth2.jwt.JwtValidators
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 
@@ -44,9 +46,8 @@ public class SecurityConfig {
     public fun securityFilterChain(
         http: HttpSecurity,
         jwtDecoder: JwtDecoder,
-        @Value("\${security.oauth2.admin}") adminQuery: String,
+        @Value("\${security.oauth2.admin-role:admin}") adminRole: String,
     ): SecurityFilterChain {
-        val adminClaimQuery = JwtClaimQuery.parse(adminQuery)
         val jwtAuthProvider = JwtAuthenticationProvider(jwtDecoder)
 
         http {
@@ -64,7 +65,7 @@ public class SecurityConfig {
                         val auth = jwtAuthProvider.authenticate(it) as JwtAuthenticationToken
                         val authorities = auth.authorities.toMutableList()
 
-                        if(adminClaimQuery.query(auth.token)) {
+                        if(auth.token.realmRoles().contains(adminRole)) {
                             authorities.add(SimpleGrantedAuthority(ADMIN_AUTHORITY))
                         }
 
@@ -85,7 +86,14 @@ public class SecurityConfig {
     @ConditionalOnProperty(value = ["security.oauth2.enabled"], havingValue = "true", matchIfMissing = false)
     public fun createJwtDecoder(
         @Value("\${security.oauth2.issuer-url}") issuer: String,
+        @Value("\${security.oauth2.jwks-url:}") jwksUrl: String,
     ): JwtDecoder {
-        return JwtDecoders.fromIssuerLocation(issuer)
+        if (jwksUrl.isBlank()) {
+            return JwtDecoders.fromIssuerLocation(issuer)
+        }
+
+        return NimbusJwtDecoder.withJwkSetUri(jwksUrl).build().apply {
+            setJwtValidator(JwtValidators.createDefaultWithIssuer(issuer))
+        }
     }
 }

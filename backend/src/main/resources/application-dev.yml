@@ -11,24 +11,25 @@ spring:
     max-request-size: 100MB
 
   datasource:
-    url: jdbc:mysql://localhost:3306/home?allowPublicKeyRetrieval=true
+    url: jdbc:postgresql://localhost:5432/home
     username: home
     password: password
 
 security:
   oauth2:
     enabled: true
-    admin: email("admin@domain.com")
-    issuer-url: http://localhost:8081/auth/realms/master
+    admin-role: admin
+    issuer-url: http://localhost:8081/realms/home-portal
+    jwks-url: http://localhost:8081/realms/home-portal/protocol/openid-connect/certs
     client:
-      authorization-url: http://localhost:8081/auth/realms/master/protocol/openid-connect/auth
-      token-url: http://localhost:8081/auth/realms/master/protocol/openid-connect/token
+      authorization-url: http://localhost:8081/realms/home-portal/protocol/openid-connect/auth
+      token-url: http://localhost:8081/realms/home-portal/protocol/openid-connect/token
       client-id: home-portal
-      client-secret: EYm1bCnTp35MN8Phqe7hB97gj3zPwIwJ
+      client-secret: home-portal-dev-secret
       scope: ~
 
     # Comma separated list of allowed referrers.
-    referrers: http://localhost:3000
+    referrers: http://localhost:8080
 
 springdoc:
   api-docs:

@@ -1,4 +1,4 @@
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 import { expireCookie, parseCookies } from "../utils/CookieUtils";
 import { ServiceResponse, createLoginResponse } from "./ServiceResponse";
 import {getConfig} from "../config/config";
@@ -19,6 +19,12 @@ interface OAuth2TokenResponse {
     'not-before-policy'?: number,
     session_state?: string,
     scope?: string
+}
+
+interface AccessTokenClaims extends JwtPayload {
+  realm_access?: {
+    roles?: unknown
+  }
 }
 
 class OAuth2ClientServiceImpl {
@@ -72,6 +78,17 @@ class OAuth2ClientServiceImpl {
     }
 
     return response
+  }
+
+  getUserRoles(): string[] {
+    const accessToken = this.getAccessToken()
+    if (!accessToken) {
+      return []
+    }
+
+    const claims = jwtDecode<AccessTokenClaims>(accessToken)
+    const roles = claims.realm_access?.roles
+    return Array.isArray(roles) ? roles.filter((role): role is string => typeof role === "string") : []
   }
 
   private async refresh() {

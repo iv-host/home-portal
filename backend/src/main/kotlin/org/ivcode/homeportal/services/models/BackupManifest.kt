@@ -16,6 +16,7 @@ public data class BackupLink(
     val name: String,
     val href: String,
     val icon: BackupImageRef?,
+    val roles: List<String> = emptyList(),
 )
 
 public data class BackupBackground(

@@ -1,41 +1,91 @@
 services:
-  # database: persistence
   db:
-    image: "mysql:8.0"
+    image: postgres:16
     ports:
-      - "3306:3306"
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: home
+      POSTGRES_USER: home
+      POSTGRES_PASSWORD: password
     volumes:
-     - "./initdb:/docker-entrypoint-initdb.d:ro"
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init-keycloak-db.sql:/docker-entrypoint-initdb.d/init-keycloak-db.sql:ro
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-    environment:
-      MYSQL_USER: home
-      MYSQL_PASSWORD: password
-      MYSQL_DATABASE: home
-      MYSQL_ROOT_PASSWORD: password
-  
-  # keycloak: OAuth2
-  keycloak:
-    image: "quay.io/keycloak/keycloak:23.0"
-    restart: always
-    ports:
-      - "8081:8080"
-    environment:
-      KC_DB: mysql
-      KC_DB_URL_HOST: db
-      KC_DB_URL_PORT: 3306
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: password
-      KC_DB_URL_PROPERTIES: ?allowPublicKeyRetrieval=true
-      KC_PROXY: edge
-    command: [
-      "start-dev",
-      "--http-relative-path",
-      "/auth"
-    ]
+      test: ["CMD-SHELL", "pg_isready -U home -d home"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  liquibase:
+    image: liquibase/liquibase:4.25.0
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      INSTALL_POSTGRESQL: "true"
+    volumes:
+      - ../../backend/src/main/resources:/liquibase/changelog:ro
+    command:
+      - --url=jdbc:postgresql://db:5432/home
+      - --changeLogFile=database/db.changelog-root.yml
+      - --username=home
+      - --password=password
+      - update
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8081:8080"
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME: localhost
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command:
+      - start-dev
+      - --import-realm
+    volumes:
+      - ./postgres/home-portal-realm.json:/opt/keycloak/data/import/home-portal-realm.json:ro
+
+  app:
+    build:
+      context: ../..
+      dockerfile: scripts/docker/Dockerfile.dev
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+      keycloak:
+        condition: service_started
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/home
+      DATABASE_USERNAME: home
+      DATABASE_PASSWORD: password
+      OAUTH2_ENABLED: "true"
+      OAUTH2_ADMIN_ROLE: admin
+      OAUTH2_ISSUER_URL: http://localhost:8081/realms/home-portal
+      OAUTH2_AUTH_URL: http://localhost:8081/realms/home-portal/protocol/openid-connect/auth
+      OAUTH2_TOKEN_URL: http://keycloak:8080/realms/home-portal/protocol/openid-connect/token
+      OAUTH2_JWKS_URL: http://keycloak:8080/realms/home-portal/protocol/openid-connect/certs
+      OAUTH2_CLIENT_ID: home-portal
+      OAUTH2_CLIENT_SECRET: home-portal-dev-secret
+    command:
+      - sh
+      - -c
+      - |
+        until curl --fail --silent "$${OAUTH2_JWKS_URL}" > /dev/null; do
+          echo "Waiting for Keycloak realm..."
+          sleep 2
+        done
+        exec sh ./entrypoint.sh
+
+volumes:
+  postgres-data:

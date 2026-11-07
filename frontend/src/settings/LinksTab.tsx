@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { visuallyHidden } from '@mui/utils';
 import { Link, LinkService } from '../services/LinksService';
@@ -26,7 +27,8 @@ interface Row {
   id: number,
   name: string,
   icon: string,
-  href: string
+  href: string,
+  roles: string
 }
 
 function createRowArray(links: Link[]): Row[] {
@@ -41,7 +43,8 @@ function createRow(
     id,
     name: link.name,
     icon: link.icon!,
-    href: link.href
+    href: link.href,
+    roles: link.roles?.join(', ') ?? ''
   };
 }
 
@@ -107,7 +110,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           key='name'
           align={'left'}
           sortDirection={orderBy === 'name' ? order : false}
-          style={{width: "20%"}}
+          style={{width: "15%"}}
         >
             <TableSortLabel
               active={orderBy === 'name'}
@@ -126,16 +129,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           key='icon'
           align='left'
           padding='none'
-          style={{width: "10%"}}
+          style={{width: "8%"}}
         >
             Icon
         </TableCell>
         <TableCell
           key='href'
           align='left'
-          style={{width: "60%"}}
+          style={{width: "47%"}}
         >
             Href
+        </TableCell>
+        <TableCell
+          key='roles'
+          align='left'
+          style={{width: "20%"}}
+        >
+            Roles
         </TableCell>
         <TableCell
           key='buttons'
@@ -222,6 +232,7 @@ export const LinkTab = (props: LinkTabProps) => {
   const [deleteDialog_row, setDeleteDialog_row] = React.useState<Row | undefined>(undefined);
 
   const [createLinkDialog_open, setCreateLinkDialog_open] = React.useState(false);
+  const [editLinkDialog_link, setEditLinkDialog_link] = React.useState<Link | undefined>(undefined);
 
   const load = React.useCallback(async () => {
     await request(LinkService.getLinks(),
@@ -272,6 +283,18 @@ export const LinkTab = (props: LinkTabProps) => {
     if(props.onLinksUpdated) props.onLinksUpdated()
   }
 
+  const handleUpdateLink = async (oldName: string, form: FormData) => {
+    await request(LinkService.updateLink(oldName, form),
+      undefined,
+      msg => props.onError ? props.onError(msg) : nop())
+    await load()
+    if(props.onLinksUpdated) props.onLinksUpdated()
+  }
+
+  const handleEditClick = (row: Row) => {
+    setEditLinkDialog_link(links.find(link => link.name === row.name))
+  }
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Row,
@@ -300,6 +323,12 @@ export const LinkTab = (props: LinkTabProps) => {
         open = {createLinkDialog_open}
         onClose={() => setCreateLinkDialog_open(false) }
         onCreateLink={handleCreateLink}
+      />
+      <CreateLinkDialog
+        open={editLinkDialog_link !== undefined}
+        link={editLinkDialog_link}
+        onClose={() => setEditLinkDialog_link(undefined)}
+        onUpdateLink={handleUpdateLink}
       />
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar
@@ -340,11 +369,17 @@ export const LinkTab = (props: LinkTabProps) => {
                       <img src={row.icon} style={{ height: "32px", width: "32px" }} alt="" />
                     </TableCell>
                     <TableCell>{row.href}</TableCell>
+                    <TableCell>{row.roles}</TableCell>
                     <TableCell 
                       sx={{ padding: 0 }}
                     >
+                      <Tooltip title="Edit" enterDelay={500} placement="right">
+                        <IconButton aria-label={`Edit ${row.name}`} onClick={() => handleEditClick(row)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title="Delete" enterDelay={500} placement="right">
-                        <IconButton onClick={() => {handleDeleteClick(row)} }>
+                        <IconButton aria-label={`Delete ${row.name}`} onClick={() => {handleDeleteClick(row)} }>
                           <DeleteIcon />
                         </IconButton>
                       </Tooltip>

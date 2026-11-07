@@ -1,0 +1,42 @@
+FROM eclipse-temurin:21-jdk-jammy AS build
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends --yes curl ca-certificates gnupg \
+    && curl --fail --silent --show-error --location https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install --no-install-recommends --yes nodejs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+COPY . .
+RUN sed -i 's/\r$//' ./gradlew \
+    && chmod +x ./gradlew \
+    && ./gradlew :backend:dockerJar --no-daemon
+
+FROM amazoncorretto:21-alpine AS corretto-jdk
+
+RUN apk add --no-cache binutils
+RUN $JAVA_HOME/bin/jlink \
+    --verbose \
+    --add-modules ALL-MODULE-PATH \
+    --strip-debug \
+    --no-man-pages \
+    --no-header-files \
+    --compress=zip-9 \
+    --output /customjre
+
+FROM alpine:latest
+ENV JAVA_HOME=/jre
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+COPY --from=corretto-jdk /customjre $JAVA_HOME
+RUN apk --no-cache add curl
+
+WORKDIR /app
+COPY --from=build /workspace/backend/build/dockerJar/home-portal.jar .
+COPY scripts/docker/entrypoint.sh entrypoint.sh
+
+HEALTHCHECK --timeout=5s --start-period=30s \
+  CMD curl -f http://localhost:8080/health-check || exit 1
+
+CMD ["sh", "./entrypoint.sh"]

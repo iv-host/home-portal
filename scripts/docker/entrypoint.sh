@@ -15,10 +15,11 @@ PROFILE=" \
 if [ "$(echo "$OAUTH2_ENABLED" | awk '{print tolower($0)}')" = "true" ]; then
   PROFILE="$PROFILE -Dsecurity.oauth2.enabled=true"
 
-  [ ! -z "$OAUTH2_ADMIN" ] && PROFILE="$PROFILE -Dsecurity.oauth2.admin=$OAUTH2_ADMIN" || { echo "'OAUTH2_ADMIN' env variable is required if OAuth2 is enabled"; exit 1; }
+  [ ! -z "$OAUTH2_ADMIN_ROLE" ] && PROFILE="$PROFILE -Dsecurity.oauth2.admin-role=$OAUTH2_ADMIN_ROLE"
   [ ! -z "$OAUTH2_ISSUER_URL" ] && PROFILE="$PROFILE -Dsecurity.oauth2.issuer-url=$OAUTH2_ISSUER_URL" || { echo "'OAUTH2_ISSUER_URL' env variable is required if OAuth2 is enabled"; exit 1; }
   [ ! -z "$OAUTH2_AUTH_URL" ] && PROFILE="$PROFILE -Dsecurity.oauth2.client.authorization-url=$OAUTH2_AUTH_URL" || { echo "'OAUTH2_AUTH_URL' env variable is required if OAuth2 is enabled"; exit 1; }
   [ ! -z "$OAUTH2_TOKEN_URL" ] && PROFILE="$PROFILE -Dsecurity.oauth2.client.token-url=$OAUTH2_TOKEN_URL" || { echo "'OAUTH2_TOKEN_URL' env variable is required if OAuth2 is enabled"; exit 1; }
+  [ ! -z "$OAUTH2_JWKS_URL" ] && PROFILE="$PROFILE -Dsecurity.oauth2.jwks-url=$OAUTH2_JWKS_URL"
   [ ! -z "$OAUTH2_CLIENT_ID" ] && PROFILE="$PROFILE -Dsecurity.oauth2.client.client-id=$OAUTH2_CLIENT_ID" || { echo "'OAUTH2_CLIENT_ID' env variable is required if OAuth2 is enabled"; exit 1; }
   [ ! -z "$OAUTH2_CLIENT_SECRET" ] && PROFILE="$PROFILE -Dsecurity.oauth2.client.client-secret=$OAUTH2_CLIENT_SECRET" || { echo "'OAUTH2_CLIENT_SECRET' env variable is required if OAuth2 is enabled"; exit 1; }
   [ ! -z "$OAUTH2_CLIENT_SCOPE" ] && PROFILE="$PROFILE -Dsecurity.oauth2.client.scope=$OAUTH2_CLIENT_SCOPE"

@@ -14,6 +14,7 @@ public class HealthService(
     private val healthDao: HealthDao,
     @Value("\${security.oauth2.enabled:false}") private val isOAuthEnabled: Boolean,
     @Value("\${security.oauth2.issuer-url:#{null}}") private val oauthIssuerUrl: String?,
+    @Value("\${security.oauth2.jwks-url:#{null}}") private val oauthJwksUrl: String?,
 ) {
 
     public fun healthCheck(): HealthInfo {
@@ -55,8 +56,9 @@ public class HealthService(
     private fun testIssuer(): HealthTestResult {
         return try {
             if (isOAuthEnabled) {
-                if (testUrl(oauthIssuerUrl!!) == 200) {
-                    // OAuth2 is enabled and the issuer-url is available
+                val issuerCheckUrl = oauthJwksUrl?.takeIf { it.isNotBlank() } ?: oauthIssuerUrl!!
+                if (testUrl(issuerCheckUrl) == 200) {
+                    // OAuth2 is enabled and the issuer or its signing keys are available
                     HealthTestResult(
                         success = true,
                         message = "available"

@@ -11,7 +11,8 @@ export interface BackgroundImage {
 export interface Link {
   name: string,
   href: string,
-  icon?: string
+  icon?: string,
+  roles: string[]
 }
 
 export interface UserInfo {
@@ -123,7 +124,7 @@ class LinksServiceImpl {
 
   async deleteLink(name: string): Promise<ServiceResponse<void>> {
     return OAuth2ClientService.call(async (authorization) => {
-      const response = await fetch(this.apiUrl + `/links/${name}`, {
+      const response = await fetch(this.apiUrl + `/links/${encodeURIComponent(name)}`, {
         method: 'DELETE',
         headers: this.headers(authorization)
       });
@@ -134,8 +135,20 @@ class LinksServiceImpl {
 
   async createLink(name: string, form: FormData): Promise<ServiceResponse<void>> {
     return OAuth2ClientService.call(async (authorization) => {
-      const response = await fetch(this.apiUrl + `/links/${name}`, {
+      const response = await fetch(this.apiUrl + `/links/${encodeURIComponent(name)}`, {
         method: 'POST',
+        body: form,
+        headers: this.headers(authorization)
+      });
+
+      return createResponse(response)
+    })
+  }
+
+  async updateLink(oldName: string, form: FormData): Promise<ServiceResponse<void>> {
+    return OAuth2ClientService.call(async (authorization) => {
+      const response = await fetch(this.apiUrl + `/links/${encodeURIComponent(oldName)}`, {
+        method: 'PUT',
         body: form,
         headers: this.headers(authorization)
       });

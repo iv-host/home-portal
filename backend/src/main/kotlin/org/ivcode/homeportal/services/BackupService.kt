@@ -57,6 +57,7 @@ public class BackupService(
                     icon = if (image?.filename != null && image.mime != null) {
                         BackupImageRef(filename = image.filename, mime = image.mime)
                     } else null,
+                    roles = link.roles,
                 )
             },
             backgrounds = backgrounds.mapNotNull { bg ->
@@ -134,7 +135,7 @@ public class BackupService(
             CreateImageRequest(filename = ref.filename, mime = ref.mime, data = zip.getInputStream(entry))
         }
 
-        linkService.createLink(CreateLinkRequest(name = link.name, href = link.href, icon = icon))
+        linkService.createLink(CreateLinkRequest(name = link.name, href = link.href, icon = icon, roles = link.roles))
     }
 
     private fun restoreBackground(zip: ZipFile, background: BackupBackground) {

@@ -5,4 +5,5 @@ public data class LinkEntity (
     val imageId: Long? = null,
     val name: String? = null,
     val href: String? = null,
+    val roles: List<String> = emptyList(),
 )

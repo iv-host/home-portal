@@ -7,6 +7,8 @@ import Alert from '@mui/material/Alert';
 import { request } from './services/ServiceResponse';
 import { AlertTitle } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { OAuth2ClientService } from './services/OAuth2ClientService';
+import { isLinkVisibleToRoles } from './utils/LinkRoleUtils';
 
 const LinkContainer  = styled('div')(({ theme }) => ({
   backgroundRepeat: "no-repeat",
@@ -32,6 +34,7 @@ function App() {
   const [ userInfo, setUserInfo] = useState<UserInfo>()
   const [ links, setLinks ] = useState<Link[]>()
   const [ background, setBackground] = useState<BackgroundImage>()
+  const [ userRoles, setUserRoles ] = useState<string[]>([])
 
   const linkContainerRef = createRef<HTMLDivElement>()
 
@@ -50,9 +53,11 @@ function App() {
     (msg) => setError(msg));
 
   useEffect(() => {
-    loadUserInfo().catch(e => setError("Error loading user info"))
-    loadBackground().catch(e => setError("Error loading background"))
-    loadLinks().catch(e => setError("Error loading links"))
+    Promise.all([
+      loadUserInfo().catch(e => setError("Error loading user info")),
+      loadBackground().catch(e => setError("Error loading background")),
+      loadLinks().catch(e => setError("Error loading links"))
+    ]).then(() => setUserRoles(OAuth2ClientService.getUserRoles()))
   }, [])
 
   const isReady = ():boolean => {
@@ -82,7 +87,7 @@ function App() {
       <LinkContainer ref={linkContainerRef} style={{
         backgroundImage: background ? `url(${background.url})` : "unset"
       }}>
-          {links!.map(function(link, i) {
+          {links!.filter(link => isLinkVisibleToRoles(link, userRoles)).map(function(link) {
             return <LinkCard key={link.href} name={link.name} href={link.href} icon={link.icon}/>
           })}
       </LinkContainer>

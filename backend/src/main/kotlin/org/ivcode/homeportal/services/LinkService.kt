@@ -2,8 +2,10 @@ package org.ivcode.homeportal.services
 
 import org.ivcode.homeportal.exceptions.InternalServerErrorException
 import org.ivcode.homeportal.exceptions.NotFoundException
+import org.ivcode.homeportal.exceptions.ConflictException
 import org.ivcode.homeportal.services.models.CreateLinkRequest
 import org.ivcode.homeportal.services.models.Link
+import org.ivcode.homeportal.services.models.UpdateLinkRequest
 import org.ivcode.homeportal.repositories.LinkDao
 import org.ivcode.homeportal.repositories.entities.LinkEntity
 import org.ivcode.homeportal.utils.toImagePath
@@ -18,8 +20,12 @@ public class LinkService (
 ) {
 
     @Transactional
-    public fun getAllLinks(): List<Link> {
-        return linkDao.getLinkIcons().map { l -> l.toLink() }.sortedBy { it.name }
+    public fun getAllLinks(userRoles: Set<String>): List<Link> {
+        return linkDao.getLinkIcons().map { l ->
+            l.toLink().copy(roles = l.link?.roles ?: emptyList())
+        }.filter { link ->
+            link.roles.isEmpty() || link.roles.any(userRoles::contains)
+        }.sortedBy { it.name }
     }
 
     @Transactional
@@ -39,14 +45,74 @@ public class LinkService (
         val link = LinkEntity(
             imageId = imageId,
             name = request.name,
-            href = request.href
+            href = request.href,
+            roles = request.roles.map(String::trim).filter(String::isNotEmpty).distinct()
         )
         linkDao.createLink(link)
+        if (link.roles.isNotEmpty()) {
+            linkDao.createLinkRoles(link.id!!, link.roles)
+        }
 
         return Link (
             name = request.name,
             href = request.href,
-            icon = iconPath
+            icon = iconPath,
+            roles = link.roles
+        )
+    }
+
+    @Transactional
+    public fun updateLink(oldName: String, request: UpdateLinkRequest): Link {
+        val existing = linkDao.getLinkIcon(oldName) ?: throw NotFoundException()
+        val existingLink = existing.link ?: throw InternalServerErrorException()
+        val linkId = existingLink.id ?: throw InternalServerErrorException()
+
+        if (request.name != oldName && linkDao.getLinkIcon(request.name) != null) {
+            throw ConflictException()
+        }
+
+        val roles = request.roles.map(String::trim).filter(String::isNotEmpty).distinct()
+        val existingImage = existing.image
+        var imageId = existingLink.imageId
+        var iconPath = existingImage?.toImagePath()
+
+        if (request.icon != null) {
+            if (existingImage != null) {
+                if (linkDao.clearLinkImage(oldName) != 1) {
+                    throw InternalServerErrorException()
+                }
+                imageService.deleteImage(existingImage.path!!, existingImage.filename!!)
+            }
+
+            val path = "/link/${request.name}"
+            imageId = imageService.postImage(
+                path = path,
+                filename = request.icon.filename,
+                mime = request.icon.mime,
+                input = request.icon.data
+            )
+            iconPath = toImagePath(path, request.icon.filename)
+        }
+
+        val updatedLink = LinkEntity(
+            imageId = imageId,
+            name = request.name,
+            href = request.href,
+        )
+        if (linkDao.updateLink(oldName, updatedLink) != 1) {
+            throw InternalServerErrorException()
+        }
+
+        linkDao.deleteLinkRoles(linkId)
+        if (roles.isNotEmpty()) {
+            linkDao.createLinkRoles(linkId, roles)
+        }
+
+        return Link(
+            name = request.name,
+            href = request.href,
+            icon = iconPath,
+            roles = roles
         )
     }
 

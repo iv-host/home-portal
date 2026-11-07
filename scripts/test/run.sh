@@ -15,7 +15,7 @@ export "DATABASE_URL=jdbc:mysql://localhost:3306/home?allowPublicKeyRetrieval=tr
 export "DATABASE_USERNAME=home"
 export "DATABASE_PASSWORD=password"
 export "OAUTH2_ENABLED=true"
-export "OAUTH2_ADMIN=email(\"admin@domain.com\")"
+export "OAUTH2_ADMIN_ROLE=admin"
 export "OAUTH2_ISSUER_URL=http://localhost:8081/auth/realms/master"
 export "OAUTH2_AUTH_URL=http://localhost:8081/auth/realms/master/protocol/openid-connect/auth"
 export "OAUTH2_TOKEN_URL=http://localhost:8081/auth/realms/master/protocol/openid-connect/token"
